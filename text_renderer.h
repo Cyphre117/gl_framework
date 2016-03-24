@@ -3,6 +3,9 @@
 
 #include "shader_program.h"
 #include <string>
+#include <vector>
+
+class Window;
 
 class TextRenderer
 {
@@ -14,16 +17,19 @@ public:
 	void putString() {}
 	void batchRender();
 
-	void setTextShader( ShaderProgram* shader );
+	void buildVertexBuffer();
+
+	void setWindow( Window* window ) { window_ = window; }
 
 private:
 	ShaderProgram* text_shader_;
-	GLuint font_bitmap_;
+	Window* window_;
+	bool rebuild_verts_;
+	std::vector<GLfloat> vertex_buffer_;
 
+	GLuint font_bitmap_;
 	GLuint vao_;
 	GLuint vbo_;
-
-	void buildVertexBuffer();
 };
 
 #endif

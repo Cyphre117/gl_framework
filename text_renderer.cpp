@@ -2,7 +2,8 @@
 #include "shader_program.h"
 #include <string>
 
-TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
+TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader ) :
+rebuild_verts_( true )
 {	
 	{
 		std::string projectPath;    
@@ -26,7 +27,7 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
     }
     SDL_FreeSurface( image );
 
-    /*
+    //*
     text_shader_ = shader;
 	text_shader_->bind();
 
@@ -34,41 +35,36 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 	glBindVertexArray( vao_ );
     glGenBuffers( 1, &vbo_ );
 
-    GLfloat vertices[] = {
-         0.0f,  0.5f,
-         0.5f, -0.5f,
-        -0.5f, -0.5f
-    };
-
-	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
-	glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
-
     GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
-    glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	*/
+    glEnableVertexAttribArray( posAttrib );
+    glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0 );
 }
 
 void TextRenderer::batchRender()
 {
-	//text_shader_->bind();
+	// Only rebuild the vertex buffer when smoething changes
+	if( rebuild_verts_ ) {
+		buildVertexBuffer();
+		rebuild_verts_ = false;
+	}
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void TextRenderer::buildVertexBuffer()
 {
-    GLfloat vertices[] = {
-         0.0f,  0.5f,
-         0.5f, -0.5f,
-        -0.5f, -0.5f
-    };
+    vertex_buffer_.push_back( 0.0f );
+    vertex_buffer_.push_back( 0.5f );
+    vertex_buffer_.push_back( 0.5f );
+    vertex_buffer_.push_back( -0.5f );
+    vertex_buffer_.push_back( -0.5f );
+    vertex_buffer_.push_back( -0.5f );
 
-	//glBindVertexArray( vao_ );
+	glBindVertexArray( vao_ );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
-	glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
-
-    GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
-    glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glBufferData( GL_ARRAY_BUFFER,
+		sizeof(vertex_buffer_[0]) * vertex_buffer_.size(),
+		vertex_buffer_.data(),
+		GL_DYNAMIC_DRAW 
+	);
 }
