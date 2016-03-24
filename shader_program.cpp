@@ -69,14 +69,13 @@ tex_mag_filter_( GL_NEAREST )
 	    glLinkProgram( program_ );
 
 	    // Test stuff!
-	    bind();
+	    //bind();
 
-	    // Create Vertex Array Object
 	    GLuint vao;
-	    glGenVertexArrays(1, &vao);
-	    glBindVertexArray(vao);
+	    glGenVertexArrays( 1, &vao );
+	    glBindVertexArray( vao );
 
-	    // Setup a test quad
+	    // Create a Vertex Buffer Object and copy the vertex data to it
 	    GLuint vbo;
 	    glGenBuffers( 1, &vbo );
 
@@ -89,6 +88,9 @@ tex_mag_filter_( GL_NEAREST )
 	    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	    glUseProgram( program_ );
+
+	    // Specify the layout of the vertex data
 	    GLint posAttrib = glGetAttribLocation(program_, "position");
 	    glEnableVertexAttribArray(posAttrib);
 	    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -102,7 +104,8 @@ ShaderProgram::~ShaderProgram()
     glDeleteShader( fragment_shader_ );
 }
 
-void ShaderProgram::bind() {
+void ShaderProgram::bind()
+{
 	glUseProgram( program_ );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex_wrap_s_ );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex_warp_t_ );

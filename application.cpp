@@ -22,15 +22,15 @@ void Application::init()
 {
 	// Initialise components
 	window_ = new Window( "system", 640, 480 );
-	text_ = new TextRenderer( "images/font8.bmp" );
 	text_shader_ = new ShaderProgram( "shaders/text.vs", "shaders/text.fs" );
+	text_ = new TextRenderer( "images/font8.bmp", text_shader_ );
 
 	// Initialise states
 	game_ = new Game;
 	game_->init();
 	game_->setWindow( window_ );
 	game_->setTextRenderer( text_ );
-	text_->setTextShader( text_shader_ );
+	//text_->setTextShader( text_shader_ );
 
 	app_stack_.push( game_ );
 }

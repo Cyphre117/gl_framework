@@ -2,7 +2,7 @@
 #include "shader_program.h"
 #include <string>
 
-TextRenderer::TextRenderer( std::string filename )
+TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 {	
 	{
 		std::string projectPath;    
@@ -26,18 +26,49 @@ TextRenderer::TextRenderer( std::string filename )
     }
     SDL_FreeSurface( image );
 
+    /*
+    text_shader_ = shader;
+	text_shader_->bind();
 
-    //glBindVertexArray( test_quad_ );
+    glGenVertexArrays( 1, &vao_ );
+	glBindVertexArray( vao_ );
+    glGenBuffers( 1, &vbo_ );
+
+    GLfloat vertices[] = {
+         0.0f,  0.5f,
+         0.5f, -0.5f,
+        -0.5f, -0.5f
+    };
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
+	glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
+
+    GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	*/
 }
 
 void TextRenderer::batchRender()
 {
-    // Ready the shader
 	//text_shader_->bind();
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void TextRenderer::buildVertexBuffer()
+{
+    GLfloat vertices[] = {
+         0.0f,  0.5f,
+         0.5f, -0.5f,
+        -0.5f, -0.5f
+    };
+
+	//glBindVertexArray( vao_ );
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
+	glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
+
+    GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }

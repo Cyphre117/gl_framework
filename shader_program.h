@@ -17,11 +17,7 @@ public:
 
 	void bind();
 
-	//TODO: add functions to set these params and defaults in constructor
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	GLint getProgram() { return program_; }
 
 	void setTextureFilter( GLint min, GLint mag ) {
 		tex_min_filter_ = min;
