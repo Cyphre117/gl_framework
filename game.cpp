@@ -1,4 +1,5 @@
 #include "game.h"
+#include "input.h"
 #include "window.h"
 #include "text_renderer.h"
 
@@ -42,6 +43,24 @@ bool Game::update()
 	text_->putChar('c', 0.2, 0, 32 );
 	text_->putChar(254, 0, 0.2, 32 );
 	text_->putString("Hello world!\nHow are you?", -1, 1, 32 );
+
+	for( int s = (int)SDL_SCANCODE_UNKNOWN; s <= (int)SDL_SCANCODE_SLEEP; ++s )
+	{
+		SDL_Scancode sc = (SDL_Scancode)s;
+
+		if( input_->isPressed( sc ) )
+		{
+			SDL_Log("%s PRESSED", SDL_GetKeyName( SDL_GetKeyFromScancode( sc ) ) );
+		}
+		if( input_->isDown( sc ) )
+		{
+			SDL_Log("%s DOWN", SDL_GetKeyName( SDL_GetKeyFromScancode( sc ) ) );
+		}
+		if( input_->isReleased( sc ) )
+		{
+			SDL_Log("%s RELEASED", SDL_GetKeyName( SDL_GetKeyFromScancode( sc ) ) );
+		}
+	}
 
 	return true;
 }

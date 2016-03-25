@@ -9,12 +9,13 @@ public:
 	Input();
 	~Input();
 
-	void update();
+	// Saves the current state so we can compare states with last fame
+	void store_input();
 
-	bool isDown( SDL_Scancode scancode );
-	bool isUp( SDL_Scancode scancode );
-	bool isPressed( SDL_Scancode scancode );
-	bool isReleased( SDL_Scancode scancode );
+	bool isDown( SDL_Scancode sc ) { return keyboard_state_[sc]; }
+	bool isUp( SDL_Scancode sc ) { return !keyboard_state_[sc]; }
+	bool isPressed( SDL_Scancode sc ) { return keyboard_state_[sc] && !old_keyboard_state_[sc]; }
+	bool isReleased( SDL_Scancode sc ) { return !keyboard_state_[sc] && old_keyboard_state_[sc]; }
 
 private:
 	const Uint8* keyboard_state_;

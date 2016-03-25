@@ -63,5 +63,5 @@ void Window::setBlendFunction( GLenum source_factor, GLenum dest_factor )
 void Window::updateSizeInfo()
 {
     SDL_GetWindowSize( win_, &width_, &height_ );
-    glViewport(0, 0, width_, height_ );
+    glViewport( 0, 0, width_, height_ );
 }

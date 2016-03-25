@@ -3,6 +3,7 @@
 
 #include "application_state.h"
 
+class Input;
 class Window;
 class TextRenderer;
 
@@ -16,11 +17,13 @@ public:
 	void shutdown() override;
 	bool frame() override;
 
+	void setInput( Input* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }
 	void setTextRenderer( TextRenderer* text ) { text_ = text; }
 
 private:
 
+	Input* input_;
 	Window* window_;
 	TextRenderer* text_;
 

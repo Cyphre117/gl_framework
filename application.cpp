@@ -32,6 +32,7 @@ void Application::init()
 	// Initialise states
 	game_ = new Game;
 	game_->init();
+	game_->setInput( input_ );
 	game_->setWindow( window_ );
 	game_->setTextRenderer( text_ );
 
@@ -89,6 +90,10 @@ void Application::frame()
 
 void Application::handle_events()
 {
+	// store input BEFORE calling SDL_Pump events
+	// so it can store the old keyboard values	
+	input_->store_input();
+
 	SDL_Event event;
 	while( SDL_PollEvent( &event ) ) {
 		if( event.type == SDL_QUIT ) done_ = true;

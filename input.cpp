@@ -8,6 +8,7 @@ num_keys_(0)
 {
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
+	SDL_Log("num keys %i", num_keys_ );
 }
 
 Input::~Input()
@@ -18,11 +19,8 @@ Input::~Input()
 	}
 }
 
-void Input::update()
+void Input::store_input()
 {
 	// Copy last frames keyboard state to the old state array
 	std::memcpy( old_keyboard_state_, keyboard_state_, num_keys_ );
-
-	// TODO: figure out what to do if the size of the returned array changes
-	keyboard_state_ = SDL_GetKeyboardState( NULL );
 }
