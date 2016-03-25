@@ -67,6 +67,8 @@ tex_mag_filter_( GL_NEAREST )
 	    glAttachShader( program_, fragment_shader_ );
 	    glBindFragDataLocation( program_, 0, "outColour" );
 	    glLinkProgram( program_ );
+
+	    SDL_Log("Compiled %s and %s", vertex.c_str(), fragment.c_str() );
     }
 }
 

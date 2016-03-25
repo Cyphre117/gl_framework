@@ -6,6 +6,11 @@ Game::Game() :
 window_(nullptr)
 {
 	// Do all initialisation in init()
+	//TODO: do i have to?
+	//	This was important for making sure all openGL stuff
+	//	was cleanup up before quiting the library
+	//	but are theere any other things which are order dependant like that?
+	// 	can init and shutdown just be moved to ctor and dtor
 }
 
 void Game::init()
@@ -21,11 +26,8 @@ bool Game::frame()
 	if( !handle_events() )
 		return false;
 
-	// TODO: this should go in an update function
-	text_->putChar('a', 0, 0, 32 );
-	text_->putChar('b', 0.1, 0, 32 );
-	text_->putChar('c', 0.2, 0, 32 );
-	text_->putChar(254, 0, 0.2, 32 );
+	if( !update() )
+		return false;
 
 	if( !physics() )
 		return false;
@@ -43,6 +45,16 @@ bool Game::handle_events()
 		if( event.type == SDL_KEYDOWN )
 			if( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ) return false;
 	}
+
+	return true;
+}
+
+bool Game::update()
+{
+	text_->putChar('a', 0, 0, 32 );
+	text_->putChar('b', 0.1, 0, 32 );
+	text_->putChar('c', 0.2, 0, 32 );
+	text_->putChar(254, 0, 0.2, 32 );
 
 	return true;
 }

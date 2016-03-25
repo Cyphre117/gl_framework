@@ -58,7 +58,7 @@ void TextRenderer::render()
 	glBufferData( GL_ARRAY_BUFFER,
 		sizeof(vertex_buffer_[0]) * vertex_buffer_.size(),
 		vertex_buffer_.data(),
-		GL_DYNAMIC_DRAW 
+		GL_STREAM_DRAW 
 	);
 
 	// Draw the size of the vertex buffer / the number of components per vert
