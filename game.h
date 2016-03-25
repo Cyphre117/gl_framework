@@ -24,7 +24,6 @@ private:
 	Window* window_;
 	TextRenderer* text_;
 
-	bool handle_events();
 	bool update();
 	bool graphics();
 	bool physics();

@@ -8,6 +8,7 @@ class ApplicationState;
 class ShaderProgram;
 class TextRenderer;
 class Window;
+class Input;
 class Game;
 
 class Application
@@ -24,13 +25,16 @@ public:
 	void frame();
 
 private:
-
-	// Removes quit events from the queue
-	void filter_events();
+	void handle_events();
 
 	bool done_;
 
+	// Application states
 	Game* game_;
+
+	// Applicaton components
+	// TODO: convert these to unique_ptrs to enforce ownership?
+	Input* input_;
 	Window* window_;
 	TextRenderer* text_;
 	ShaderProgram* text_shader_;
