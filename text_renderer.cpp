@@ -23,7 +23,7 @@ rebuild_verts_( true )
     if( !image ) {
         SDL_Log("failed to load image '%s'", filename.c_str() );
     } else {
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels );
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels );
     }
     SDL_FreeSurface( image );
 
@@ -35,22 +35,27 @@ rebuild_verts_( true )
 	glBindVertexArray( vao_ );
     glGenBuffers( 1, &vbo_ );
 
+    buildVertexBuffer();
+
     GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
     glEnableVertexAttribArray( posAttrib );
-    glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0 );
+    glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0 );
 
     GLint texAttrib = glGetAttribLocation( text_shader_->getProgram(), "vTexCoord");
     glEnableVertexAttribArray( texAttrib );
-    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
+    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
 }
 
 void TextRenderer::batchRender()
 {
 	// Only rebuild the vertex buffer when smoething changes
 	if( rebuild_verts_ ) {
-		buildVertexBuffer();
+		//buildVertexBuffer();
 		rebuild_verts_ = false;
 	}
+
+	text_shader_->bind();
+    glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
 
 	// Draw the size of the vertex buffer / the number of components per vert
     glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_.size() / 4 );
@@ -60,11 +65,14 @@ void TextRenderer::buildVertexBuffer()
 {
 	vertex_buffer_.clear();
 
-	pushVert( 0.0f,  0.5f, 0.0f, 0.0f );
-	pushVert( 0.5f, -0.5f, 0.0f, 0.0f );
-	pushVert( -0.5f, -0.5f, 0.0f, 0.0f );
+	pushVert( -0.5f,  0.5f,  0.0f, 0.0f );
+	pushVert(  0.5f, -0.5f,  1.0f, 1.0f );
+	pushVert( -0.5f, -0.5f,  0.0f, 1.0f );
+	pushVert( -0.5f,  0.5f,  0.0f, 0.0f );
+	pushVert(  0.5f,  0.5f,  1.0f, 0.0f );
+	pushVert(  0.5f, -0.5f,  1.0f, 1.0f );
 
-	glBindVertexArray( vao_ );
+	//glBindVertexArray( vao_ );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 	glBufferData( GL_ARRAY_BUFFER,
 		sizeof(vertex_buffer_[0]) * vertex_buffer_.size(),

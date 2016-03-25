@@ -71,29 +71,26 @@ tex_mag_filter_( GL_NEAREST )
 	    // Test stuff!
 	    //bind();
 
-	    GLuint vao;
-	    glGenVertexArrays( 1, &vao );
-	    glBindVertexArray( vao );
+	    //GLfloat vertices[] = {
+	    //     0.0f,  0.5f, 0.0f, 1.0f,
+	    //     0.5f, -0.5f, 0.0f, 0.0f,
+	    //    -0.5f, -0.5f, 1.0f, 0.0f
+	    //};
 
-	    // Create a Vertex Buffer Object and copy the vertex data to it
-	    GLuint vbo;
-	    glGenBuffers( 1, &vbo );
+	    //GLuint vao, vbo;
+	    //glGenVertexArrays( 1, &vao );
+	    //glBindVertexArray( vao );
+	    //glGenBuffers( 1, &vbo );
 
-	    GLfloat vertices[] = {
-	         0.0f,  0.5f,
-	         0.5f, -0.5f,
-	        -0.5f, -0.5f
-	    };
+	    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
-	    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	    glUseProgram( program_ );
+	    //glUseProgram( program_ );
 
 	    // Specify the layout of the vertex data
-	    GLint posAttrib = glGetAttribLocation(program_, "position");
-	    glEnableVertexAttribArray(posAttrib);
-	    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	    //GLint posAttrib = glGetAttribLocation(program_, "position");
+	    //glEnableVertexAttribArray(posAttrib);
+	    //glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
     }
 }
 
