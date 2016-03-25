@@ -67,30 +67,6 @@ tex_mag_filter_( GL_NEAREST )
 	    glAttachShader( program_, fragment_shader_ );
 	    glBindFragDataLocation( program_, 0, "outColour" );
 	    glLinkProgram( program_ );
-
-	    // Test stuff!
-	    //bind();
-
-	    //GLfloat vertices[] = {
-	    //     0.0f,  0.5f, 0.0f, 1.0f,
-	    //     0.5f, -0.5f, 0.0f, 0.0f,
-	    //    -0.5f, -0.5f, 1.0f, 0.0f
-	    //};
-
-	    //GLuint vao, vbo;
-	    //glGenVertexArrays( 1, &vao );
-	    //glBindVertexArray( vao );
-	    //glGenBuffers( 1, &vbo );
-
-	    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
-
-	    //glUseProgram( program_ );
-
-	    // Specify the layout of the vertex data
-	    //GLint posAttrib = glGetAttribLocation(program_, "position");
-	    //glEnableVertexAttribArray(posAttrib);
-	    //glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
     }
 }
 

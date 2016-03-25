@@ -13,18 +13,16 @@ public:
 	TextRenderer( std::string filename, ShaderProgram* shader );
 	~TextRenderer() {}
 
-	void putChar() {}
+	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );
 	void putString() {}
-	void batchRender();
 
-	void buildVertexBuffer();
+	void render();
 
 	void setWindow( Window* window ) { window_ = window; }
 
 private:
 	ShaderProgram* text_shader_;
 	Window* window_;
-	bool rebuild_verts_;
 	std::vector<GLfloat> vertex_buffer_;
 
 	GLuint font_bitmap_;

@@ -1,9 +1,9 @@
 #include "text_renderer.h"
 #include "shader_program.h"
+#include "window.h"
 #include <string>
 
-TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader ) :
-rebuild_verts_( true )
+TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 {	
 	{
 		std::string projectPath;    
@@ -32,10 +32,9 @@ rebuild_verts_( true )
 	text_shader_->bind();
 
     glGenVertexArrays( 1, &vao_ );
-	glBindVertexArray( vao_ );
     glGenBuffers( 1, &vbo_ );
-
-    buildVertexBuffer();
+	glBindVertexArray( vao_ );
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 
     GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
     glEnableVertexAttribArray( posAttrib );
@@ -46,39 +45,45 @@ rebuild_verts_( true )
     glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
 }
 
-void TextRenderer::batchRender()
+void TextRenderer::render()
 {
-	// Only rebuild the vertex buffer when smoething changes
-	if( rebuild_verts_ ) {
-		//buildVertexBuffer();
-		rebuild_verts_ = false;
-	}
+	//buildVertexBuffer();
 
+	// Bind the shader
 	text_shader_->bind();
     glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
 
-	// Draw the size of the vertex buffer / the number of components per vert
-    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_.size() / 4 );
-}
-
-void TextRenderer::buildVertexBuffer()
-{
-	vertex_buffer_.clear();
-
-	pushVert( -0.5f,  0.5f,  0.0f, 0.0f );
-	pushVert(  0.5f, -0.5f,  1.0f, 1.0f );
-	pushVert( -0.5f, -0.5f,  0.0f, 1.0f );
-	pushVert( -0.5f,  0.5f,  0.0f, 0.0f );
-	pushVert(  0.5f,  0.5f,  1.0f, 0.0f );
-	pushVert(  0.5f, -0.5f,  1.0f, 1.0f );
-
-	//glBindVertexArray( vao_ );
+    // Push the verts to the GPU
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 	glBufferData( GL_ARRAY_BUFFER,
 		sizeof(vertex_buffer_[0]) * vertex_buffer_.size(),
 		vertex_buffer_.data(),
 		GL_DYNAMIC_DRAW 
 	);
+
+	// Draw the size of the vertex buffer / the number of components per vert
+    glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_.size() / 4 );
+
+    // Clear the verts
+    vertex_buffer_.clear();
+}
+
+void TextRenderer::putChar( unsigned char c, float x, float y, unsigned int size_pixels )
+{
+	static float tex_width = 1.0f / 16.0f;
+	static float tex_height = 1.0f / 16.0f;
+	float tex_x = (c % 16) * tex_width;
+	float tex_y = (c / 16) * tex_height;
+
+	float width = (size_pixels / (float)window_->width()) * 2.0f;
+	float height = (size_pixels / (float)window_->height()) * -2.0f;
+
+	pushVert( x, 			y, 			tex_x, 				tex_y );
+	pushVert( x + width, 	y + height, tex_x + tex_width, 	tex_y + tex_height );
+	pushVert( x, 			y + height, tex_x, 				tex_y + tex_height );
+	pushVert( x, 			y, 			tex_x, 				tex_y );
+	pushVert( x + width, 	y, 			tex_x + tex_width, 	tex_y );
+	pushVert( x + width, 	y + height, tex_x + tex_width, 	tex_y + tex_height );
 }
 
 void TextRenderer::pushVert( float x, float y, float u, float v )
