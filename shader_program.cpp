@@ -28,7 +28,7 @@ tex_mag_filter_( GL_NEAREST )
 	        char buffer[512];
 	        glGetShaderInfoLog( vertex_shader_, 512, NULL, buffer );
 	        SDL_Log( "ERROR compiling vertex shader '%s' ", vertex.c_str() );
-	        SDL_Log( buffer );
+	        SDL_Log( "%s", buffer );
 	        good_ = false;
 	    }
 	    //else SDL_Log("Compiled vertex Shader '%s'", vertex.c_str() );
@@ -51,7 +51,7 @@ tex_mag_filter_( GL_NEAREST )
             char buffer[512];
             glGetShaderInfoLog( fragment_shader_, 512, NULL, buffer );
             SDL_Log( "ERROR compiling fragment shader '%s'", fragment.c_str() );
-            SDL_Log( buffer );
+            SDL_Log( "%s", buffer );
             good_ = false;
         }
         //else SDL_Log("Compiled fragment Shader '%s'", fragment.c_str() );

@@ -1,7 +1,4 @@
 #include "window.h"
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <SDL2/SDL_opengl.h>
 
 Window::Window( std::string title, unsigned width, unsigned height ) :
 width_(0),
@@ -29,6 +26,9 @@ height_(0)
     SDL_Log("OpenGL version %s", glGetString( GL_VERSION ) );
 
 	setClearColour( 0.0, 0.0, 0.0, 1.0 );
+    
+    enable( GL_BLEND );
+    setBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     SDL_GetWindowSize( win_, &width_, &height_ );
 }
@@ -54,7 +54,14 @@ void Window::setClearColour( float r, float g, float b, float a )
     glClearColor( r, g, b, a );
 }
 
+// https://www.opengl.org/sdk/docs/man2/xhtml/glBlendFunc.xml
+void Window::setBlendFunction( GLenum source_factor, GLenum dest_factor )
+{
+    glBlendFunc( source_factor, dest_factor );
+}
+
 void Window::updateSizeInfo()
 {
-    SDL_GetWindowSize( win_, &width_, &height_ );	
+    SDL_GetWindowSize( win_, &width_, &height_ );
+    glViewport(0, 0, width_, height_ );
 }

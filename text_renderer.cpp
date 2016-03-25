@@ -47,8 +47,6 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 
 void TextRenderer::render()
 {
-	//buildVertexBuffer();
-
 	// Bind the shader
 	text_shader_->bind();
     glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
@@ -66,6 +64,23 @@ void TextRenderer::render()
 
     // Clear the verts
     vertex_buffer_.clear();
+}
+
+void TextRenderer::putString( std::string str, float x, float y, unsigned int size_pixels )
+{
+	float char_width = (size_pixels / (float)window_->width()) * 2.0f;
+
+	for( size_t i = 0; i < str.size(); ++i )
+	{
+		// If it's a new line, move down and back
+		if( str[i] == '\n' ) {
+			y += (size_pixels / (float)window_->height()) * -2.0f;
+			x -= char_width * (i + 1);
+			continue;
+		}
+
+		putChar( str[i], x + char_width * i, y, size_pixels );
+	}
 }
 
 void TextRenderer::putChar( unsigned char c, float x, float y, unsigned int size_pixels )

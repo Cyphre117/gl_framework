@@ -14,7 +14,7 @@ public:
 	~TextRenderer() {}
 
 	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );
-	void putString() {}
+	void putString( std::string str, float x, float y, unsigned int size_pixels );
 
 	void render();
 
