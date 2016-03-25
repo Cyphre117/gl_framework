@@ -30,6 +30,8 @@ private:
 	GLuint font_bitmap_;
 	GLuint vao_;
 	GLuint vbo_;
+
+	void pushVert( float x, float y, float u, float v );
 };
 
 #endif

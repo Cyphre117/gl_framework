@@ -53,12 +53,9 @@ void TextRenderer::batchRender()
 
 void TextRenderer::buildVertexBuffer()
 {
-    vertex_buffer_.push_back( 0.0f );
-    vertex_buffer_.push_back( 0.5f );
-    vertex_buffer_.push_back( 0.5f );
-    vertex_buffer_.push_back( -0.5f );
-    vertex_buffer_.push_back( -0.5f );
-    vertex_buffer_.push_back( -0.5f );
+	pushVert( 0.0f,  0.5f, 0.0f, 0.0f );
+	pushVert( 0.5f, -0.5f, 0.0f, 0.0f );
+	pushVert( -0.5f, -0.5f, 0.0f, 0.0f );
 
 	glBindVertexArray( vao_ );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
@@ -67,4 +64,10 @@ void TextRenderer::buildVertexBuffer()
 		vertex_buffer_.data(),
 		GL_DYNAMIC_DRAW 
 	);
+}
+
+void TextRenderer::pushVert( float x, float y, float u, float v )
+{
+	vertex_buffer_.push_back( x );
+	vertex_buffer_.push_back( y );
 }
