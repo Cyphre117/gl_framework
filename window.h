@@ -25,6 +25,7 @@ public:
 	int width() const { return width_; }
 	int height() const { return height_; }
 	SDL_GLContext context() const { return context_; }
+	SDL_Window* window() const { return win_; }
 
 private:
 	SDL_Window* win_;

@@ -27,7 +27,6 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
     }
     SDL_FreeSurface( image );
 
-    //*
     text_shader_ = shader;
 	text_shader_->bind();
 
@@ -36,11 +35,11 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 	glBindVertexArray( vao_ );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 
-    GLint posAttrib = glGetAttribLocation( text_shader_->getProgram(), "position");
+    GLint posAttrib = text_shader_->getAttribLocation( "position" );
     glEnableVertexAttribArray( posAttrib );
     glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0 );
 
-    GLint texAttrib = glGetAttribLocation( text_shader_->getProgram(), "vTexCoord");
+    GLint texAttrib = text_shader_->getAttribLocation( "vTexCoord" );
     glEnableVertexAttribArray( texAttrib );
     glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
 }
@@ -52,6 +51,7 @@ void TextRenderer::render()
     glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
 
     // Push the verts to the GPU
+	glBindVertexArray( vao_ );    
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 	glBufferData( GL_ARRAY_BUFFER,
 		sizeof(vertex_buffer_[0]) * vertex_buffer_.size(),

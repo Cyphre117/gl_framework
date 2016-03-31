@@ -2,13 +2,16 @@
 #define APPLICATION_H
 
 #include <stack>
+#include <memory>
 #include <SDL2/SDL.h>
 
 class ApplicationState;
 class ShaderProgram;
 class TextRenderer;
 class Window;
+class Camera;
 class Input;
+class Timer;
 class Game;
 
 class Application
@@ -30,14 +33,15 @@ private:
 	bool done_;
 
 	// Application states
-	Game* game_;
+	std::unique_ptr<Game> game_;
 
 	// Applicaton components
-	// TODO: convert these to unique_ptrs to enforce ownership?
-	Input* input_;
-	Window* window_;
-	TextRenderer* text_;
-	ShaderProgram* text_shader_;
+	std::unique_ptr<Input> input_;
+	std::unique_ptr<Timer> timer_;
+	std::unique_ptr<Window> window_;
+	std::unique_ptr<Camera> camera_;
+	std::unique_ptr<TextRenderer> text_;
+	std::unique_ptr<ShaderProgram> text_shader_;
 
 	std::stack<ApplicationState*> app_stack_;
 };

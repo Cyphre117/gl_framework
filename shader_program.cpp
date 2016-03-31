@@ -19,19 +19,8 @@ tex_mag_filter_( GL_NEAREST )
 	    glShaderSource( vertex_shader_, 1, &source_ptr, NULL );
 	    glCompileShader( vertex_shader_ );
 	
-	    // Check the shader was compiled correctly
-	    GLint status;
-	    glGetShaderiv( vertex_shader_, GL_COMPILE_STATUS, &status );
-	    if( status != GL_TRUE )
-	    {
-	        // There was an error compiling the shader
-	        char buffer[512];
-	        glGetShaderInfoLog( vertex_shader_, 512, NULL, buffer );
-	        SDL_Log( "ERROR compiling vertex shader '%s' ", vertex.c_str() );
-	        SDL_Log( "%s", buffer );
-	        good_ = false;
-	    }
-	    //else SDL_Log("Compiled vertex Shader '%s'", vertex.c_str() );
+	    if( !did_shader_compile_ok( vertex_shader_, vertex ) )
+            good_ = false;
 	}    
     {
     	fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
@@ -42,19 +31,9 @@ tex_mag_filter_( GL_NEAREST )
         
         glShaderSource( fragment_shader_, 1, &source_ptr , NULL );
         glCompileShader( fragment_shader_ );
-    
-        // Check the shader was compiled succesfully
-        GLint status;
-        glGetShaderiv( fragment_shader_, GL_COMPILE_STATUS, &status );
-        if( status != GL_TRUE )
-        {
-            char buffer[512];
-            glGetShaderInfoLog( fragment_shader_, 512, NULL, buffer );
-            SDL_Log( "ERROR compiling fragment shader '%s'", fragment.c_str() );
-            SDL_Log( "%s", buffer );
-            good_ = false;
-        }
-        //else SDL_Log("Compiled fragment Shader '%s'", fragment.c_str() );
+
+        if( !did_shader_compile_ok( fragment_shader_, fragment ) )
+            good_ = false;    
     }
 
     // Check the vertex and fragment shaders are good
@@ -69,6 +48,14 @@ tex_mag_filter_( GL_NEAREST )
 	    glLinkProgram( program_ );
 
 	    SDL_Log("Compiled %s and %s", vertex.c_str(), fragment.c_str() );
+
+        // now cleanup the shaders
+        // TODO: it's possible we want to the same vertex/fagment/etc. shader multple times in different programs
+        // TODO: find a way of supporting this without the caller having to do extra work
+        glDetachShader( program_, vertex_shader_ );
+        glDetachShader( program_, fragment_shader_ );
+        glDeleteShader( vertex_shader_ );
+        glDeleteShader( fragment_shader_ ); 
     }
 }
 
@@ -88,6 +75,25 @@ void ShaderProgram::bind()
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex_mag_filter_ );
 }
 
+GLint ShaderProgram::getUniformLocation( const GLchar* name )
+{
+    GLint uniform = glGetUniformLocation( program_, name );
+    if( uniform == -1 ) {
+        SDL_Log("ERROR did not find uniform '%s' in shader program '%i'", name, program_ );
+    }
+    return uniform;
+}
+
+
+GLint ShaderProgram::getAttribLocation( const GLchar* name )
+{
+    GLint attribute = glGetAttribLocation( program_, name );
+    if( attribute == -1 ) {
+        SDL_Log("ERROR did not find attribute '%s' in shader program '%i'", name, program_ );
+    }
+    return attribute;
+}
+
 // TODO: convert this to SDL rw ops and move to seperate header file
 std::string ShaderProgram::load_file( std::string filename )
 {
@@ -99,12 +105,28 @@ std::string ShaderProgram::load_file( std::string filename )
 
     std::ifstream file( projectPath + filename );
     if( !file.good() )
-        //SDL_Log("Loaded %s", filename.c_str() );
-    //else 
         SDL_Log("Could not load  %s!", filename.c_str() );
 
     std::stringstream buffer;
     buffer << file.rdbuf();
 
     return buffer.str();
+}
+
+bool ShaderProgram::did_shader_compile_ok( GLuint shader, std::string shader_name )
+{    
+    // Check the shader was compiled succesfully
+    GLint status;
+    glGetShaderiv( shader, GL_COMPILE_STATUS, &status );
+    if( status != GL_TRUE )
+    {
+        // TODO: check the length of the error log rather than giving it a fixed length
+        char buffer[512];
+        glGetShaderInfoLog( shader, 512, NULL, buffer );
+        SDL_Log( "ERROR compiling fragment shader '%s'", shader_name.c_str() );
+        SDL_Log( "%s", buffer );
+        return false;
+    }
+
+    return true;
 }

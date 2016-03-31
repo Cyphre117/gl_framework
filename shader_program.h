@@ -17,6 +17,8 @@ public:
 
 	void bind();
 
+	GLint getUniformLocation( const GLchar* name );
+	GLint getAttribLocation( const GLchar* name );
 	GLint getProgram() { return program_; }
 
 	void setTextureFilter( GLint min, GLint mag ) {
@@ -33,6 +35,7 @@ private:
 	// Good if shaders compiled without error
 	bool good_;
 	std::string load_file( std::string filename );
+	bool did_shader_compile_ok( GLuint shader, std::string shader_name );
 
 	GLuint program_;
 	GLuint vertex_shader_;

@@ -1,14 +1,15 @@
 #include "input.h"
+#include "window.h"
 #include <cstring>
 
 Input::Input() :
 keyboard_state_(nullptr),
 old_keyboard_state_(nullptr),
-num_keys_(0)
+num_keys_(0),
+cursor_locked_(false)
 {
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
-	SDL_Log("num keys %i", num_keys_ );
 }
 
 Input::~Input()
@@ -23,4 +24,28 @@ void Input::store_input()
 {
 	// Copy last frames keyboard state to the old state array
 	std::memcpy( old_keyboard_state_, keyboard_state_, num_keys_ );
+
+	mouse_state_.xrel = 0;
+	mouse_state_.yrel = 0;
+}
+
+void Input::handle_mouse_event( const SDL_Event& event )
+{
+	if( event.type == SDL_MOUSEMOTION && cursor_locked_ )
+	{
+		mouse_state_.xrel += event.motion.xrel;
+		mouse_state_.yrel += event.motion.yrel;
+	}
+}
+
+void Input::lockCursor() { 
+    SDL_WarpMouseInWindow( window_->window(), window_->width()/2, window_->height()/2 );
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+    cursor_locked_ = true;
+}
+
+void Input::unlockCursor() {
+	SDL_SetRelativeMouseMode(SDL_FALSE);
+	SDL_ShowCursor(SDL_TRUE);
+	cursor_locked_ = false;
 }
