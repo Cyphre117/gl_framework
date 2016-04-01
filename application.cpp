@@ -111,6 +111,9 @@ void Application::handle_events()
 					input_->unlockCursor();
 				} else input_->lockCursor();
 			}
+			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
+				window_->saveScreenshot("system_engine_screenshot.bmp");
+			}
 			break;
 		case SDL_MOUSEMOTION:
 			input_->handle_mouse_event( event );

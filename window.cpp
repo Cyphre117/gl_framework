@@ -1,4 +1,5 @@
 #include "window.h"
+#include <vector>
 
 Window::Window( std::string title, unsigned width, unsigned height ) :
 width_(0),
@@ -64,4 +65,16 @@ void Window::updateSizeInfo()
 {
     SDL_GetWindowSize( win_, &width_, &height_ );
     glViewport( 0, 0, width_, height_ );
+}
+
+void Window::saveScreenshot( const char * filename )
+{
+    std::vector<unsigned char> pixels;
+    pixels.reserve( width_ * height_ * 4 );
+    glReadPixels( 0, 0, width_, height_, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    SDL_Surface * surf = SDL_CreateRGBSurfaceFrom( pixels.data(), width_, height_, 8 * 4, width_ * 4, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000 );
+    SDL_SaveBMP( surf, filename );
+
+    SDL_FreeSurface(surf);
 }

@@ -35,9 +35,11 @@ public:
 	//void setDownKey()
 
 	void setPosition( glm::vec3 pos ) { pos_ = pos; }
-	void setDirection( glm::vec3 dir ) { dir_ = glm::normalize(dir); }
+	void setLookAt( glm::vec3 dir ) { } // TODO
 	void setVerticalFOV( float fov ) { vertical_fov_ = glm::radians(fov); }
 	void setNearFar( float near, float far ) { near_plane_ = near; far_plane_ = far; }
+	void setMoveSpeed( float forwardBack, float leftRight, float upDown );
+	void setRotateSpeed( float horizontal, float vertical );
 
 	void setInput( Input* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }

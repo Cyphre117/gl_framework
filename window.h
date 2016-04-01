@@ -21,6 +21,7 @@ public:
 	void disable( GLenum cap ) { glDisable( cap ); }
 	void setBlendFunction( GLenum source_factor, GLenum dest_factor );
 	void setClearColour( float r, float g, float b, float a );
+	void saveScreenshot( const char * filename );
 
 	int width() const { return width_; }
 	int height() const { return height_; }

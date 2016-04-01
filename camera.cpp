@@ -24,17 +24,12 @@ window_(nullptr)
 
  void Camera::update( float dt )
  {
- 	//SDL_Log("dir %f %f %f, rit %f %f %f", dir_.x, dir_.y, dir_.z, right_.x, right_.y, right_.z );
-
-	// apply verticle rotation
-	glm::vec3 new_dir = glm::normalize( glm::rotate( dir_, vertical_rotate_speed_ * dt * -input_->yMotion(), right_ ) );
+	// apply vertical rotation
+	glm::vec3 new_dir = glm::rotate( dir_, vertical_rotate_speed_ * dt * -input_->yMotion(), right_ );
 
 	// Make sure we aren't rolling over and turning upside down
-	if( glm::dot( glm::cross(UP_Y, right_), new_dir ) >= 0.0f ) //|| (dir_.y == 1.0f && input_->yMotion() > 0) || (dir_.y == -1.0f && input_->yMotion() < 0) )
+	if( glm::dot( glm::cross(UP_Y, right_), new_dir ) >= 0.0f )
 	{
-		//SDL_Log("cross %f %f %f", glm::cross(dir_, UP_Y).x, glm::cross(dir_, UP_Y).y, glm::cross(dir_, UP_Y).z );
-		//SDL_Log("dot %f", glm::dot( glm::cross(UP_Y, right_), dir_ ) );
-
 		dir_ = new_dir;
 	}
 	else
@@ -70,5 +65,18 @@ window_(nullptr)
 		pos_ += UP_Y * vertical_move_speed_ * dt;
 	if( input_->isDown( SDL_SCANCODE_Q ) )
 		pos_ -= UP_Y * vertical_move_speed_ * dt;
+}
 
+void Camera::setMoveSpeed( float forwardBack, float leftRight, float upDown )
+{
+	forward_move_speed_ = forwardBack;
+	strafe_move_speed_ = leftRight;
+	vertical_move_speed_ = upDown;
+}
+
+
+void Camera::setRotateSpeed( float horizontal, float vertical )
+{
+	horizontal_rotate_speed_ = horizontal;
+	vertical_rotate_speed_ = vertical;
 }
