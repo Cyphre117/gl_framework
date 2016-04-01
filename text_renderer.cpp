@@ -45,6 +45,9 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 
 void TextRenderer::render()
 {
+	// Disable depth testing, text is always on top
+	window_->disable( GL_DEPTH_TEST );
+
 	// Bind the shader
 	text_shader_->bind();
 	glActiveTexture(GL_TEXTURE0);
@@ -64,6 +67,8 @@ void TextRenderer::render()
 
     // Clear the verts
     vertex_buffer_.clear();
+
+	window_->enable( GL_DEPTH_TEST );
 }
 
 void TextRenderer::putString( std::string str, float x, float y, unsigned int size_pixels )

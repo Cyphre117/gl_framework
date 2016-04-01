@@ -30,6 +30,7 @@ height_(0)
     
     enable( GL_BLEND );
     setBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    enable( GL_DEPTH_TEST );
 
     SDL_GetWindowSize( win_, &width_, &height_ );
 }
@@ -47,7 +48,7 @@ void Window::present()
 
 void Window::clear()
 {
-    glClear( GL_COLOR_BUFFER_BIT );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
 void Window::setClearColour( float r, float g, float b, float a )
