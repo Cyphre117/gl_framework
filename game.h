@@ -44,7 +44,6 @@ private:
 	glm::mat4 view_matrix_;
 	glm::mat4 projection_matrix_;
 
-
     GLuint vao;
     GLuint vbo;
 

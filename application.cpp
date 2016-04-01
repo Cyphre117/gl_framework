@@ -34,6 +34,7 @@ void Application::init()
 	camera_.reset( new Camera() );
 	text_->setWindow( window_.get() );
 	input_->setWindow( window_.get() );
+	camera_->setInput( input_.get() );
 	camera_->setWindow( window_.get() );
 
 	// Initialise states

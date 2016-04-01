@@ -41,11 +41,12 @@ void Input::handle_mouse_event( const SDL_Event& event )
 void Input::lockCursor() { 
     SDL_WarpMouseInWindow( window_->window(), window_->width()/2, window_->height()/2 );
     SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_ShowCursor(SDL_DISABLE);
     cursor_locked_ = true;
 }
 
 void Input::unlockCursor() {
 	SDL_SetRelativeMouseMode(SDL_FALSE);
-	SDL_ShowCursor(SDL_TRUE);
+	SDL_ShowCursor(SDL_ENABLE);
 	cursor_locked_ = false;
 }

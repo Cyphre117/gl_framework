@@ -23,7 +23,7 @@ void Game::init()
 	uniform_view_matrix_ = basic_shader_.getUniformLocation( "view" );
 	uniform_projection_matrix_ = basic_shader_.getUniformLocation( "projection" );
 
-    camera_->setDirection( glm::vec3(0.5, 0.0, 1.0) );
+    //camera_->setDirection( glm::vec3(0.5, 0.0, 1.0) );
 
 	// This defaults to the identity matrix
 	model_matrix_ = glm::mat4(1.0f);
@@ -84,15 +84,17 @@ bool Game::update()
 {
 	text_->putString("Hello world", -1, 1, 32 );
 
-	camera_->setDirection( glm::rotate( camera_->direction(), -0.05f * timer_->dt() * input_->xMotion(), camera_->up() ) );
-	camera_->setDirection( glm::rotate( camera_->direction(), 0.05f * timer_->dt() * input_->yMotion(), glm::cross( camera_->up(), camera_->direction() ) ) );
+	//camera_->setDirection( glm::rotate( camera_->direction(), -0.05f * timer_->dt() * input_->xMotion(), camera_->up() ) );
+	//camera_->setDirection( glm::rotate( camera_->direction(), 0.05f * timer_->dt() * input_->yMotion(), glm::cross( camera_->up(), camera_->direction() ) ) );
 
-	if( input_->isDown( SDL_SCANCODE_UP ) ) {
-	camera_->setPosition( camera_->position() + camera_->direction() * ( 5.0f * timer_->dt() ) );
-	}
-	if( input_->isDown( SDL_SCANCODE_DOWN ) ) {
-	camera_->setPosition( camera_->position() + camera_->direction() * ( -5.0f * timer_->dt() ) );
-	}
+	//if( input_->isDown( SDL_SCANCODE_W ) ) {
+	//	camera_->setPosition( camera_->position() + camera_->direction() * ( 5.0f * timer_->dt() ) );
+	//}
+	//if( input_->isDown( SDL_SCANCODE_S ) ) {
+	//	camera_->setPosition( camera_->position() + camera_->direction() * ( -5.0f * timer_->dt() ) );
+	//}
+
+	camera_->update( timer_->dt() );
 
 	return true;
 }
