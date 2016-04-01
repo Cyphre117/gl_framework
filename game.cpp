@@ -23,39 +23,38 @@ void Game::init()
 	uniform_view_matrix_ = basic_shader_.getUniformLocation( "view" );
 	uniform_projection_matrix_ = basic_shader_.getUniformLocation( "projection" );
 
-    //camera_->setDirection( glm::vec3(0.5, 0.0, 1.0) );
-
 	// This defaults to the identity matrix
-	model_matrix_ = glm::mat4(1.0f);
-    view_matrix_ = camera_->view();
-    projection_matrix_ = camera_->projection();
+	glm::mat4 model_matrix_ = glm::mat4(1.0f);
+    glm::mat4 view_matrix_ = camera_->view();
+    glm::mat4 projection_matrix_ = camera_->projection();
 
 	glUniformMatrix4fv( uniform_model_matrix_, 1, GL_FALSE, glm::value_ptr( model_matrix_ ) );
     glUniformMatrix4fv( uniform_view_matrix_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
     
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    quad_[0].init(
+    	&basic_shader_,
+        glm::vec3(-0.5f, 0.0f,  0.5f),
+        glm::vec3( 0.5f, 0.0f,  0.5f),
+        glm::vec3(-0.5f, 0.0f, -0.5f),
+        glm::vec3( 0.5f, 0.0f, -0.5f) 
+    );
 
-	GLint position_attrib = basic_shader_.getAttribLocation( "position" );
-	if( position_attrib != -1 ) {
-    	glEnableVertexAttribArray( position_attrib );
-		glVertexAttribPointer( position_attrib, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-	}
+    quad_[1].init(
+    	&basic_shader_,
+        glm::vec3(-1.5f,  2.0f, -1.5f),
+        glm::vec3( 1.5f,  2.0f, -1.5f),
+    	glm::vec3(-1.5f, -2.0f, -1.5f),
+		glm::vec3( 1.5f, -2.0f, -1.5f)
+    );
 
-    //  Position
-    GLfloat vertices[] = {
-        -0.5f, 0.0f,  0.5f, // Top-left
-         0.5f, 0.0f, -0.5f, // Bottom-right
-         0.5f, 0.0f,  0.5f, // Top-right
-        -0.5f, 0.0f,  0.5f,	// Top-left
-         0.5f, 0.0f, -0.5f, // Bottom-right
-        -0.5f, 0.0f, -0.5f  // Bottom-left
-    };
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW );
+    quad_[2].init(
+    	&basic_shader_,
+    	glm::vec3(-1.5f, -2.0f,  1.5f),
+		glm::vec3( 1.5f, -2.0f,  1.5f),
+		glm::vec3(-1.5f, -2.0f, -1.5f),
+		glm::vec3( 1.5f, -2.0f, -1.5f)    	
+    	);
 
     // Lock and hide the cursor
     input_->lockCursor();
@@ -82,17 +81,7 @@ bool Game::frame()
 
 bool Game::update()
 {
-	text_->putString("Hello world", -1, 1, 32 );
-
-	//camera_->setDirection( glm::rotate( camera_->direction(), -0.05f * timer_->dt() * input_->xMotion(), camera_->up() ) );
-	//camera_->setDirection( glm::rotate( camera_->direction(), 0.05f * timer_->dt() * input_->yMotion(), glm::cross( camera_->up(), camera_->direction() ) ) );
-
-	//if( input_->isDown( SDL_SCANCODE_W ) ) {
-	//	camera_->setPosition( camera_->position() + camera_->direction() * ( 5.0f * timer_->dt() ) );
-	//}
-	//if( input_->isDown( SDL_SCANCODE_S ) ) {
-	//	camera_->setPosition( camera_->position() + camera_->direction() * ( -5.0f * timer_->dt() ) );
-	//}
+	text_->putString("Hello world", -0.95, 0.95, 32 );
 
 	camera_->update( timer_->dt() );
 
@@ -104,14 +93,19 @@ bool Game::graphics()
 	window_->clear();
 
 	basic_shader_.bind();
-    view_matrix_ = camera_->view();
-    projection_matrix_ = camera_->projection();
+    glm::mat4 view_matrix_ = camera_->view();
+    glm::mat4 projection_matrix_ = camera_->projection();
     glUniformMatrix4fv( uniform_view_matrix_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
 
-    glBindVertexArray( vao );
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glDrawArrays( GL_TRIANGLES, 0, 6 );
+    quad_[0].bind();
+    quad_[0].draw();
+
+    quad_[1].bind();
+    quad_[1].draw();
+
+	quad_[2].bind();
+	quad_[2].draw();
 
 	text_->render();
 

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "application_state.h"
 #include "shader_program.h"
+#include "meshes/quad.h"
 
 class Input;
 class Timer;
@@ -40,12 +41,8 @@ private:
 	GLint uniform_model_matrix_;
 	GLint uniform_view_matrix_;
 	GLint uniform_projection_matrix_;
-	glm::mat4 model_matrix_;
-	glm::mat4 view_matrix_;
-	glm::mat4 projection_matrix_;
 
-    GLuint vao;
-    GLuint vbo;
+    QuadMesh quad_[3];
 
 	bool update();
 	bool graphics();
