@@ -11,8 +11,8 @@ public:
 	Mesh();
 	virtual ~Mesh();
 
-	void bind();
-	void draw();
+	virtual void bind();
+	virtual void draw();
 
 protected:	
     GLuint vao_;

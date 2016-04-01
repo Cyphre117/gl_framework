@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "application_state.h"
 #include "shader_program.h"
-#include "meshes/quad.h"
+#include "quad.h"
 
 class Input;
 class Timer;

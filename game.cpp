@@ -34,18 +34,18 @@ void Game::init()
     
     quad_[0].init(
     	&basic_shader_,
-        glm::vec3(-0.5f, 0.0f,  0.5f),
-        glm::vec3( 0.5f, 0.0f,  0.5f),
-        glm::vec3(-0.5f, 0.0f, -0.5f),
-        glm::vec3( 0.5f, 0.0f, -0.5f) 
-    );
-
-    quad_[1].init(
-    	&basic_shader_,
         glm::vec3(-1.5f,  2.0f, -1.5f),
         glm::vec3( 1.5f,  2.0f, -1.5f),
     	glm::vec3(-1.5f, -2.0f, -1.5f),
 		glm::vec3( 1.5f, -2.0f, -1.5f)
+    );
+
+    quad_[1].init(
+    	&basic_shader_,
+        glm::vec3(-0.5f, 0.0f,  0.5f),
+        glm::vec3( 0.5f, 0.0f,  0.5f),
+        glm::vec3(-0.5f, 0.0f, -0.5f),
+        glm::vec3( 0.5f, 0.0f, -0.5f) 
     );
 
     quad_[2].init(
@@ -106,6 +106,7 @@ bool Game::graphics()
 
 	quad_[2].bind();
 	quad_[2].draw();
+
 
 	text_->render();
 

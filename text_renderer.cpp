@@ -1,6 +1,7 @@
 #include "text_renderer.h"
 #include "shader_program.h"
 #include "window.h"
+#include "image_loader.h"
 #include <string>
 
 TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
@@ -13,20 +14,7 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 		filename = projectPath + filename;
 	}
 
-	// Creat and bind the font texture
-	glGenTextures( 1, &font_bitmap_ );
-    glActiveTexture( GL_TEXTURE0 );
-    glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
-
-    // Load the actual font file
-    SDL_Surface* image = SDL_LoadBMP( filename.c_str() );
-    if( !image ) {
-        SDL_Log("failed to load image '%s'", filename.c_str() );
-    } else {
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels );
-    }
-    SDL_FreeSurface( image );
-
+	font_bitmap_ = ImageLoader::load( filename );	
     text_shader_ = shader;
 	text_shader_->bind();
 
@@ -35,19 +23,31 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 	glBindVertexArray( vao_ );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 
-    GLint posAttrib = text_shader_->getAttribLocation( "position" );
-    glEnableVertexAttribArray( posAttrib );
-    glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0 );
+	GLint sampler = text_shader_->getUniformLocation( "font_bitmap" );
+	if( sampler != -1 )
+	{
+		glUniform1i( sampler, 0 );
+	}
 
+    GLint posAttrib = text_shader_->getAttribLocation( "vPosition" );
+    if( posAttrib != -1 )
+	{
+		glEnableVertexAttribArray( posAttrib );
+		glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0 );
+	}
     GLint texAttrib = text_shader_->getAttribLocation( "vTexCoord" );
-    glEnableVertexAttribArray( texAttrib );
-    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
+	if( posAttrib != -1 )
+	{
+	    glEnableVertexAttribArray( texAttrib );
+	    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
+	}
 }
 
 void TextRenderer::render()
 {
 	// Bind the shader
 	text_shader_->bind();
+	glActiveTexture(GL_TEXTURE0);
     glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
 
     // Push the verts to the GPU
