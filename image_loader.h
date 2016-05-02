@@ -16,6 +16,9 @@ private:
 	static bool load_ppm( std::string filepath ) { return false; }
 
 	static std::map<std::string, GLuint> image_cache_;
+
+	static std::string base_path_;
+	static const char PATH_SEPERATOR_;
 };
 
 #endif

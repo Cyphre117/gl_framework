@@ -3,12 +3,12 @@
 
 #include <SDL2/sdl.h>
 
-class Timer
+class Time
 {
 public:
 
-	Timer();
-	~Timer() {}
+	Time();
+	~Time() {}
 
 	void update();
 

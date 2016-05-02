@@ -3,7 +3,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "game.h"
 #include "input.h"
-#include "timer.h"
+#include "time.h"
 #include "camera.h"
 #include "window.h"
 #include "text_renderer.h"
@@ -83,7 +83,7 @@ bool Game::update()
 {
 	text_->putString("Hello world", -0.95, 0.95, 32 );
 
-	camera_->update( timer_->dt() );
+	camera_->update( time_->dt() );
 
 	return true;
 }
@@ -106,8 +106,7 @@ bool Game::graphics()
 
 	quad_[2].bind();
 	quad_[2].draw();
-
-
+	
 	text_->render();
 
 	window_->present();

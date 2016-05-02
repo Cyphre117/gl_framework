@@ -7,7 +7,7 @@
 #include "quad.h"
 
 class Input;
-class Timer;
+class Time;
 class Window;
 class Camera;
 class TextRenderer;
@@ -24,7 +24,7 @@ public:
 	bool frame() override;
 
 	void setInput( Input* input ) { input_ = input; }
-	void setTimer( Timer* timer ) { timer_ = timer; }
+	void setTime( Time* time ) { time_ = time; }
 	void setCamera( Camera* camera ) { camera_ = camera; }
 	void setWindow( Window* window ) { window_ = window; }
 	void setTextRenderer( TextRenderer* text ) { text_ = text; }
@@ -32,7 +32,7 @@ public:
 private:
 
 	Input* input_;
-	Timer* timer_;
+	Time* time_;
 	Window* window_;
 	Camera* camera_;
 	TextRenderer* text_;

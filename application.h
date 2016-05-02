@@ -11,7 +11,7 @@ class TextRenderer;
 class Window;
 class Camera;
 class Input;
-class Timer;
+class Time;
 class Game;
 
 class Application
@@ -37,7 +37,7 @@ private:
 
 	// Applicaton components
 	std::unique_ptr<Input> input_;
-	std::unique_ptr<Timer> timer_;
+	std::unique_ptr<Time> time_;
 	std::unique_ptr<Window> window_;
 	std::unique_ptr<Camera> camera_;
 	std::unique_ptr<TextRenderer> text_;

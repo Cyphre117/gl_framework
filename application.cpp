@@ -1,7 +1,7 @@
 #include "application.h"
 #include "game.h"
 #include "input.h"
-#include "timer.h"
+#include "time.h"
 #include "window.h"
 #include "camera.h"
 #include "text_renderer.h"
@@ -28,9 +28,9 @@ void Application::init()
 	// Initialise components
 	window_.reset( new Window( "system", 800, 600 ) );
 	text_shader_.reset( new ShaderProgram( "shaders/text.vs", "shaders/text.fs" ) );
-	text_.reset( new TextRenderer( "images/font8.bmp", text_shader_.get() ) );
+	text_.reset( new TextRenderer( "images/font.bmp", text_shader_.get() ) );
 	input_.reset( new Input() );
-	timer_.reset( new Timer() );
+	time_.reset( new Time() );
 	camera_.reset( new Camera() );
 	text_->setWindow( window_.get() );
 	input_->setWindow( window_.get() );
@@ -40,7 +40,7 @@ void Application::init()
 	// Initialise states
 	game_.reset( new Game );
 	game_->setInput( input_.get() );
-	game_->setTimer( timer_.get() );
+	game_->setTime( time_.get() );
 	game_->setCamera( camera_.get() );
 	game_->setWindow( window_.get() );
 	game_->setTextRenderer( text_.get() );
@@ -63,7 +63,7 @@ void Application::shutdown()
 	text_shader_.reset(nullptr);
 	text_.reset(nullptr);
 	input_.reset(nullptr);
-	timer_.reset(nullptr);
+	time_.reset(nullptr);
 	camera_.reset(nullptr);
 }
 
@@ -71,7 +71,7 @@ void Application::frame()
 {
 	handle_events();
 
-	timer_->update();
+	time_->update();
 
 	// Quit if there are no states on the stack
 	if( app_stack_.empty() )
