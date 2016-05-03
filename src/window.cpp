@@ -68,6 +68,32 @@ void Window::updateSizeInfo()
     glViewport( 0, 0, width_, height_ );
 }
 
+void Window::setVsync( bool enable )
+{
+    if( enable )
+    {
+        // Try to use late swap tearing first
+        int error = SDL_GL_SetSwapInterval( -1 );
+
+        // If that doesn't work try normal Vsync
+        if( error )
+        {
+            error = 0;
+            SDL_GL_SetSwapInterval( 1 );
+        }
+
+        if( error )
+        {
+            SDL_Log( "Could not enable VSync %s", SDL_GetError() );
+        }
+    }
+    else
+    {
+        // Pass zero to disable it
+        SDL_GL_SetSwapInterval( 0 );
+    }
+}
+
 void Window::saveScreenshot( const char * filename )
 {
     std::vector<unsigned char> pixels;

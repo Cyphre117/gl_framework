@@ -47,6 +47,8 @@ void Application::init()
 	game_->init();
 
 	app_stack_.push( game_.get() );
+
+	window_->setVsync( true );
 }
 
 void Application::shutdown()

@@ -1,6 +1,8 @@
 #ifndef APPLICATION_STATE_H
 #define APPLICATION_STATE_H
 
+//TODO: rename this to `SceneType`
+
 class ApplicationState
 {
 public:
