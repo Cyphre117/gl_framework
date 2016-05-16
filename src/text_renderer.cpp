@@ -4,17 +4,8 @@
 #include "image_loader.h"
 #include <string>
 
-TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
-{	
-	{
-		std::string projectPath;    
-		char* charPath = SDL_GetBasePath();    
-		projectPath = charPath;    
-		SDL_free(charPath);
-		filename = projectPath + filename;
-	}
-
-	font_bitmap_ = ImageLoader::load( filename );	
+TextRenderer::TextRenderer( ShaderProgram* shader )
+{
     text_shader_ = shader;
 	text_shader_->bind();
 
@@ -43,6 +34,13 @@ TextRenderer::TextRenderer( std::string filename, ShaderProgram* shader )
 	}
 }
 
+void TextRenderer::setTexture( TextureHandle texture )
+{
+	texture.min_filter = GL_NEAREST;
+	texture.mag_filter = GL_NEAREST;
+	texture_ = texture;
+}
+
 void TextRenderer::render()
 {
 	// Disable depth testing, text is always on top
@@ -50,8 +48,7 @@ void TextRenderer::render()
 
 	// Bind the shader
 	text_shader_->bind();
-	glActiveTexture(GL_TEXTURE0);
-    glBindTexture( GL_TEXTURE_2D, font_bitmap_ );
+	texture_.bind( 0 );
 
     // Push the verts to the GPU
 	glBindVertexArray( vao_ );    

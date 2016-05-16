@@ -56,6 +56,8 @@ void Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
+    //default_ = texture_manager_.load( "default.bmp" );
+
     // Lock and hide the cursor
     input_->lockCursor();
 }
@@ -99,12 +101,15 @@ bool Game::graphics()
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
 
     quad_[0].bind();
+    default_.bind( 0 );
     quad_[0].draw();
 
     quad_[1].bind();
+    default_.bind( 0 );
     quad_[1].draw();
 
 	quad_[2].bind();
+    default_.bind( 0 );
 	quad_[2].draw();
 	
 	text_->render();

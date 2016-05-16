@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "text_renderer.h"
 #include "shader_program.h"
+#include "texture_manager.h"
 
 Application::Application() :
 done_(false),
@@ -28,11 +29,13 @@ void Application::init()
 	// Initialise components
 	window_.reset( new Window( "system", 800, 600 ) );
 	text_shader_.reset( new ShaderProgram( "shaders/text.vs", "shaders/text.fs" ) );
-	text_.reset( new TextRenderer( "images/font.bmp", text_shader_.get() ) );
+	text_.reset( new TextRenderer( text_shader_.get() ) );
 	input_.reset( new Input() );
 	time_.reset( new Time() );
 	camera_.reset( new Camera() );
+	texture_manager_.reset( new TextureManager() );
 	text_->setWindow( window_.get() );
+	text_->setTexture( texture_manager_->load( "font.bmp" ) );
 	input_->setWindow( window_.get() );
 	camera_->setInput( input_.get() );
 	camera_->setWindow( window_.get() );

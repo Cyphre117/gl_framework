@@ -14,7 +14,7 @@ public:
 	~Window();
 
 	void present();
-	void clear();
+	void clear( GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT  );
 
 	void updateSizeInfo();
 	void enable( GLenum cap ) { glEnable( cap ); }

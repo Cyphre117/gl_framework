@@ -46,9 +46,9 @@ void Window::present()
     SDL_GL_SwapWindow( win_ );	
 }
 
-void Window::clear()
+void Window::clear( GLbitfield mask )
 {
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClear( mask );
 }
 
 void Window::setClearColour( float r, float g, float b, float a )

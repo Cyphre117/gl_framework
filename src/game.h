@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include "application_state.h"
+#include "texture_manager.h"
 #include "shader_program.h"
 #include "quad.h"
 
@@ -36,6 +37,9 @@ private:
 	Window* window_;
 	Camera* camera_;
 	TextRenderer* text_;
+
+	//TextureManager texture_manager_;
+	TextureHandle default_;
 
 	ShaderProgram basic_shader_;
 	GLint uniform_model_matrix_;

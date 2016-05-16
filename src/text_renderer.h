@@ -2,6 +2,7 @@
 #define TEXT_RENDERER_H
 
 #include "shader_program.h"
+#include "texture_handle.h"
 #include <string>
 #include <vector>
 
@@ -10,7 +11,7 @@ class Window;
 class TextRenderer
 {
 public:
-	TextRenderer( std::string filename, ShaderProgram* shader );
+	TextRenderer( ShaderProgram* shader );
 	~TextRenderer() {}
 
 	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );
@@ -19,13 +20,14 @@ public:
 	void render();
 
 	void setWindow( Window* window ) { window_ = window; }
+	void setTexture( TextureHandle texture );
 
 private:
 	ShaderProgram* text_shader_;
 	Window* window_;
 	std::vector<GLfloat> vertex_buffer_;
 
-	GLuint font_bitmap_;
+	TextureHandle texture_;
 	GLuint vao_;
 	GLuint vbo_;
 

@@ -13,10 +13,11 @@ public:
 private:
 	static bool load_bmp( std::string filepath );
 	static bool load_png( std::string filepath ) { return false; }
-	static bool load_ppm( std::string filepath ) { return false; }
+	static bool load_ppm( std::string filepath );
 
 	static std::map<std::string, GLuint> image_cache_;
 
+	static std::string extract_filetype( const std::string& filename );
 	static std::string base_path_;
 	static const char PATH_SEPERATOR_;
 };

@@ -13,8 +13,6 @@ QuadMesh::~QuadMesh()
 
 void QuadMesh::init( ShaderProgram* shader, glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3 )
 {
-	texture_ = ImageLoader::load("images/default.bmp");
-
 	this->bind();
 	shader->bind();
 
@@ -51,7 +49,4 @@ void QuadMesh::init( ShaderProgram* shader, glm::vec3 v0, glm::vec3 v1, glm::vec
 void QuadMesh::bind()
 {
 	Mesh::bind();
-
-	glActiveTexture(GL_TEXTURE0);
-    glBindTexture( GL_TEXTURE_2D, texture_ );
 }

@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 class ApplicationState;
+class TextureManager;
 class ShaderProgram;
 class TextRenderer;
 class Window;
@@ -42,6 +43,7 @@ private:
 	std::unique_ptr<Camera> camera_;
 	std::unique_ptr<TextRenderer> text_;
 	std::unique_ptr<ShaderProgram> text_shader_;
+	std::unique_ptr<TextureManager> texture_manager_;
 
 	std::stack<ApplicationState*> app_stack_;
 };

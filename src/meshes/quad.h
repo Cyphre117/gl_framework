@@ -15,7 +15,6 @@ public:
  	void bind() override;
 
 protected:
-	GLuint texture_;
 };
 
 #endif

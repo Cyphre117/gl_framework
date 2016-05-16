@@ -1,17 +1,20 @@
 #include "image_loader.h"
+#include <fstream>
 #include <SDL2/sdl.h>
 
 std::map<std::string, GLuint> ImageLoader::image_cache_;
 std::string ImageLoader::base_path_;
 
 #ifdef _WIN32
-	const char PATH_SEPERATOR_ = '\\';
+	const char ImageLoader::PATH_SEPERATOR_ = '\\';
 #else
-	const char PATH_SEPERATOR_ = '/';
+	const char ImageLoader::PATH_SEPERATOR_ = '/';
 #endif
 
 GLuint ImageLoader::load( std::string filename )
 {
+    SDL_Log( "Extension: %s", extract_filetype(filename).c_str() );
+
 	// first check the map
 	auto it = image_cache_.find( filename );
 	if( it != image_cache_.end() ) {
@@ -19,13 +22,15 @@ GLuint ImageLoader::load( std::string filename )
 		return it->second;
 	}
 
-	// If it's not already in the map, load it
+	// If it's not already in the map, create a texture load it
+    // TODO: postpone generating the OpenGL texture untill the texture has actually been found
+    // otherwise return a default texture
 	GLuint texture;
 	glGenTextures( 1, &texture );
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, texture );
 
-    // resolve the full filepath
+    // resolve the full filepath if it hasn't been done already
     if( base_path_ == "" )
     {
 		char *basePath = SDL_GetBasePath();
@@ -35,18 +40,38 @@ GLuint ImageLoader::load( std::string filename )
 		SDL_Log("Found exe at location %s", base_path_.c_str() );
     }
 
-    if( load_bmp( base_path_ + filename ) )
+    std::string filetype = extract_filetype( filename );
+    bool loaded = false;
+
+    /*
+    // Use the apropriate image loader
+    switch( filetype )
     {
-    	// Add the new texture to the map
-    	image_cache_[filename] = texture;
-    	SDL_Log( "Loaded '%s'", filename.c_str() );
-    	return texture;
+        case "bmp":
+            loaded = load_bmp( base_path_ + filename );
+        break;
+        case "ppm":
+            loaded = load_ppm( base_path_ + filename );
+        break;
+        default:
+            SDL_Log("Unrecognised filetype");
+            return 0;
+        break;
+    }
+    */
+
+    if( loaded )
+    {
+        // Add the new texture to the cache
+        image_cache_[filename] = texture;
+        SDL_Log( "Loaded '%s'", filename.c_str() );
+        return texture;
     }
     else
     {
-    	SDL_Log( "Could not load '%s'", filename.c_str() );
-    	glDeleteTextures( 1, &texture );
-    	return 0;
+        SDL_Log( "Failed to load '%s'", filename.c_str() );
+        glDeleteTextures( 1, &texture );
+        return 0;
     }
 }
 
@@ -72,4 +97,35 @@ bool ImageLoader::load_bmp( std::string filepath )
     SDL_FreeSurface( image );
 
     return success;
+}
+
+bool ImageLoader::load_ppm( std::string filepath )
+{
+    bool success = false;
+
+    std::ifstream image(filepath);
+
+    if( !image )
+    {
+        SDL_Log( "Falied to load image: '%s'", filepath.c_str() );
+    }
+
+    //std::string magic_number = 
+
+
+    return false;
+}
+
+std::string ImageLoader::extract_filetype( const std::string& filename )
+{
+    size_t dot = filename.find_last_of('.');
+
+    if( dot == std::string::npos )
+    {
+        // Did not find a dot
+        return "";
+    }
+
+    // return everything after the dot
+    return filename.substr(dot+1);
 }
