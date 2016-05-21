@@ -2,12 +2,15 @@
 #include <fstream>
 #include <sstream>
 
-ShaderProgram::ShaderProgram( std::string vertex, std::string fragment ) :
+ShaderProgram::ShaderProgram() :
 good_( true ),
 tex_wrap_s_( GL_REPEAT ),
 tex_warp_t_( GL_REPEAT ),
 tex_min_filter_( GL_NEAREST ),
 tex_mag_filter_( GL_NEAREST )
+{}
+
+void ShaderProgram::init( std::string vertex, std::string fragment )
 {
 	{
 		vertex_shader_ = glCreateShader( GL_VERTEX_SHADER );
@@ -59,7 +62,7 @@ tex_mag_filter_( GL_NEAREST )
     }
 }
 
-ShaderProgram::~ShaderProgram()
+void ShaderProgram::shutdown()
 {
     glDeleteProgram( program_ );
     glDeleteShader( vertex_shader_ );

@@ -10,8 +10,13 @@
 class Window
 {
 public:
-	Window( std::string title, unsigned width, unsigned height );
+	Window();
 	~Window();
+
+	// TODO: use these to return errors
+	// Init and shutdown do initalisation and cleanup of resources
+	void init( std::string title, unsigned width, unsigned height );
+	void shutdown();
 
 	void present();
 	void clear( GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT  );

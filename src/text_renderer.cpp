@@ -4,7 +4,14 @@
 #include "image_loader.h"
 #include <string>
 
-TextRenderer::TextRenderer( ShaderProgram* shader )
+TextRenderer::TextRenderer() :
+text_shader_(nullptr),
+window_(nullptr),
+vao_(0),
+vbo_(0)
+{}
+
+void TextRenderer::init( ShaderProgram* shader )
 {
     text_shader_ = shader;
 	text_shader_->bind();
@@ -32,6 +39,12 @@ TextRenderer::TextRenderer( ShaderProgram* shader )
 	    glEnableVertexAttribArray( texAttrib );
 	    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
 	}
+}
+
+void TextRenderer::shutdown()
+{
+	glDeleteBuffers( 1, &vbo_ );
+	glDeleteVertexArrays( 1, &vao_ );
 }
 
 void TextRenderer::setTexture( TextureHandle texture )

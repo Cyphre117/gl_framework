@@ -8,8 +8,11 @@
 class Mesh
 {
 public:
-	Mesh();
-	virtual ~Mesh();
+	Mesh() {}
+	virtual ~Mesh() {}
+
+	void init();
+	void shutdown();
 
 	virtual void bind();
 	virtual void draw();

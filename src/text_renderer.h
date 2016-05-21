@@ -11,8 +11,11 @@ class Window;
 class TextRenderer
 {
 public:
-	TextRenderer( ShaderProgram* shader );
+	TextRenderer();
 	~TextRenderer() {}
+
+	void init( ShaderProgram* shader );
+	void shutdown();
 
 	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );
 	void putString( std::string str, float x, float y, unsigned int size_pixels );

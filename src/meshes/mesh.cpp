@@ -1,12 +1,12 @@
 #include "mesh.h"
 
-Mesh::Mesh()
-{	
+void Mesh::init()
+{
     glGenVertexArrays(1, &vao_ );
     glGenBuffers(1, &vbo_ );
 }
 
-Mesh::~Mesh()
+void Mesh::shutdown()
 {
     glDeleteBuffers( 1, &vbo_ );
     glDeleteVertexArrays( 1, &vao_ );

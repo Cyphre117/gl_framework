@@ -2,17 +2,10 @@
 #include "shader_program.h"
 #include "image_loader.h"
 
-QuadMesh::QuadMesh()
-{	
-}
-
-
-QuadMesh::~QuadMesh()
-{	
-}
-
 void QuadMesh::init( ShaderProgram* shader, glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3 )
 {
+	Mesh::init();
+
 	this->bind();
 	shader->bind();
 

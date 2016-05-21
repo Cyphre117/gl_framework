@@ -18,6 +18,9 @@ public:
 	// - hide / show cursor
 	// - lock cursor to window
 
+	void init();
+	void shutdown();
+
 	// Saves the current state so we can compare states with last fame
 	void store_input();
 	void handle_mouse_event( const SDL_Event& event ); // TODO: possibly change this to handle all events instead of polling the keyboard?

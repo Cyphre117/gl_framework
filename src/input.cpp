@@ -7,12 +7,17 @@ keyboard_state_(nullptr),
 old_keyboard_state_(nullptr),
 num_keys_(0),
 cursor_locked_(false)
+{}
+
+Input::~Input() {}
+
+void Input::init()
 {
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
 }
 
-Input::~Input()
+void Input::shutdown()
 {
 	if( old_keyboard_state_ ) {
 		delete old_keyboard_state_;

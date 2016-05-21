@@ -10,9 +10,13 @@
 class ShaderProgram
 {
 public:
-	ShaderProgram( std::string vertex, std::string fragment );
-	~ShaderProgram();
+	ShaderProgram();
+	~ShaderProgram() {}
 
+	void init( std::string vertex, std::string fragment );
+	void shutdown();
+
+	// TODO: replace with error checking in init
 	bool good() { return good_; }
 
 	void bind();

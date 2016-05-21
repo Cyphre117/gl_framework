@@ -1,9 +1,14 @@
 #include "window.h"
 #include <vector>
 
-Window::Window( std::string title, unsigned width, unsigned height ) :
+Window::Window() :
 width_(0),
 height_(0)
+{}
+
+Window::~Window() {}
+
+void Window::init( std::string title, unsigned width, unsigned height )
 {
     // Specify the version of OpenGL we want
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -14,30 +19,31 @@ height_(0)
     win_ = SDL_CreateWindow( title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE );
     context_ = SDL_GL_CreateContext(win_);
     if( context_ == NULL ) {
-    	SDL_Log("SDL_Init failed: %s\n", SDL_GetError());
+        SDL_Log("SDL_Init failed: %s\n", SDL_GetError());
     }
 
     // Load OpenGL functions
     glewExperimental = GL_TRUE;
     GLenum error = glewInit();
     if( error != GLEW_OK )
-    	SDL_Log("Failed to init glew");
+        SDL_Log("Failed to init glew");
 
     // Get openGL version
     SDL_Log("OpenGL version %s", glGetString( GL_VERSION ) );
 
-	setClearColour( 0.0, 0.0, 0.0, 1.0 );
+    setClearColour( 0.0, 0.0, 0.0, 1.0 );
     
     enable( GL_BLEND );
     setBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     enable( GL_DEPTH_TEST );
 
     SDL_GetWindowSize( win_, &width_, &height_ );
+
 }
 
-Window::~Window()
-{	
-	SDL_DestroyWindow( win_ );
+void Window::shutdown()
+{
+    SDL_DestroyWindow( win_ );
     SDL_GL_DeleteContext( context_ );
 }
 
@@ -78,8 +84,7 @@ void Window::setVsync( bool enable )
         // If that doesn't work try normal Vsync
         if( error )
         {
-            error = 0;
-            SDL_GL_SetSwapInterval( 1 );
+            error = SDL_GL_SetSwapInterval( 1 );
         }
 
         if( error )

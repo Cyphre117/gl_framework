@@ -9,14 +9,13 @@
 #include "text_renderer.h"
 
 Game::Game() :
-window_(nullptr),
-basic_shader_( "shaders/vertex.vs", "shaders/fragment.fs" )
-{	
-}
+window_(nullptr)
+{}
 
 void Game::init()
 {
 	// We can only set parameters when the shader is bound
+	basic_shader_.init( "shaders/vertex.vs", "shaders/fragment.fs" );
 	basic_shader_.bind();
 
 	uniform_model_matrix_ = basic_shader_.getUniformLocation( "model" );
@@ -64,7 +63,11 @@ void Game::init()
 
 void Game::shutdown()
 {
+    for( int i = 0; i < 3; ++i )
+	   quad_[i].shutdown();
+
 	input_->unlockCursor();
+	basic_shader_.shutdown();
 }
 
 bool Game::frame()

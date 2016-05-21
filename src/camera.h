@@ -17,7 +17,7 @@ public:
 	//glm::vec3 direction() const { return dir_; }
 	//glm::vec3 up() const { return up_; }
 	
-	// Returns the camera's view matrix
+	// Returns the camera's view and projection matrices
 	glm::mat4 view() const { return glm::lookAt( pos_, pos_ + dir_, up_ ); }
 	glm::mat4 projection() const {
 		return glm::perspective( vertical_fov_, window_->width() / (float)window_->height(), near_plane_, far_plane_ );
@@ -27,7 +27,8 @@ public:
 
 	// Forward, back, left, right, up, down
 	// Set to default values in constructor
-	void setForwardKey( SDL_Scancode s ) {}
+	// TODO
+	//void setForwardKey( SDL_Scancode s ) {}
 	//void setBackwardKey()
 	//void setLeftKey()
 	//void setRightKey()

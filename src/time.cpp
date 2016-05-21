@@ -3,8 +3,7 @@
 Time::Time() :
 ticks_(0),
 old_ticks_(0)
-{
-}
+{}
 
 void Time::update()
 {

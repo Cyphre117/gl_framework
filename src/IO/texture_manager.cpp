@@ -12,13 +12,16 @@ std::string TextureManager::texture_base_path_ = "";
 #endif
 
 TextureManager::TextureManager()
+{}
+
+void TextureManager::init()
 {
 	if( setup_default_values_ == false )
 	{
 		// Create a default texture
 		glBindTexture( GL_TEXTURE_2D, 0 );
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_FLOAT, default_texture_data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_FLOAT, default_texture_data );
+		glGenerateMipmap( GL_TEXTURE_2D );
 
 		// Get the base texture path of the application
 		char* path = SDL_GetBasePath();
@@ -27,8 +30,12 @@ TextureManager::TextureManager()
 	}
 }
 
-TextureManager::~TextureManager()
+void TextureManager::shutdown()
 {
+	for( auto it = texture_cache_.begin(); it != texture_cache_.end(); ++it )
+	{
+		glDeleteTextures( 1, &it->second );
+	}
 }
 
 TextureHandle TextureManager::load( std::string filename )
@@ -36,8 +43,8 @@ TextureHandle TextureManager::load( std::string filename )
 	TextureHandle texture;
 
 	// First check to see if the image is in the cache
-	auto it = image_cache_.find( filename );
-	if( it != image_cache_.end() ) {
+	auto it = texture_cache_.find( filename );
+	if( it != texture_cache_.end() ) {
 		texture.name_ = it->second;
 		return texture;
 	}
@@ -54,10 +61,10 @@ TextureHandle TextureManager::load( std::string filename )
 	if( loaded )
 	{
 		// Generate the mip maps
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glGenerateMipmap( GL_TEXTURE_2D );
 
 		// Store the newly loaded image in the cache
-		image_cache_[filename] = name;
+		texture_cache_[filename] = name;
 		texture.name_ = name;
 	}
 	else
