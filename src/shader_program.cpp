@@ -26,7 +26,7 @@ void ShaderProgram::init( std::string vertex, std::string fragment )
             good_ = false;
 	}    
     {
-    	fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
+    	fragment_shader_ = glCreateShader( GL_FRAGMENT_SHADER );
 
         // Load the shader to a string and convert to const GLchar*
         std::string source = load_file( fragment );
@@ -123,10 +123,16 @@ bool ShaderProgram::did_shader_compile_ok( GLuint shader, std::string shader_nam
     glGetShaderiv( shader, GL_COMPILE_STATUS, &status );
     if( status != GL_TRUE )
     {
-        // TODO: check the length of the error log rather than giving it a fixed length
-        char buffer[512];
-        glGetShaderInfoLog( shader, 512, NULL, buffer );
-        SDL_Log( "ERROR compiling fragment shader '%s'", shader_name.c_str() );
+        // Get the length of the error log
+        GLint log_length = 0;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+
+        // Now get the error log itself
+        GLchar buffer[log_length];
+        glGetShaderInfoLog( shader, log_length, NULL, buffer );
+
+        // Print the error
+        SDL_Log( "ERROR: compiling fragment shader '%s'", shader_name.c_str() );
         SDL_Log( "%s", buffer );
         return false;
     }
