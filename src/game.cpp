@@ -15,8 +15,8 @@ window_(nullptr)
 void Game::init()
 {
 	// We can only set parameters when the shader is bound
-    basic_shader_.loadVertexSourceFile( "shaders/vertex.vs" );
-    basic_shader_.loadFragmentSourceFile( "shaders/fragment.fs" );
+    basic_shader_.loadVertexSourceFile( "vertex.vs" );
+    basic_shader_.loadFragmentSourceFile( "fragment.fs" );
 	basic_shader_.init();
 	basic_shader_.bind();
 
@@ -57,7 +57,7 @@ void Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
-    //default_ = texture_manager_.load( "default.bmp" );
+    default_ = texture_manager_.load( "default.bmp" );
 
     // Lock and hide the cursor
     input_->lockCursor();

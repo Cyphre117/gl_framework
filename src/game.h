@@ -38,7 +38,7 @@ private:
 	Camera* camera_;
 	TextRenderer* text_;
 
-	//TextureManager texture_manager_;
+	TextureManager texture_manager_;
 	TextureHandle default_;
 
 	ShaderProgram basic_shader_;

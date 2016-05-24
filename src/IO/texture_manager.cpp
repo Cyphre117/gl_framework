@@ -3,8 +3,11 @@
 #include <SDL2/sdl.h>
 
 bool TextureManager::setup_default_values_ = false;
-std::string TextureManager::texture_base_path_ = "";
 
+// The base path is found by SDL the first time it is needed
+std::string TextureManager::texture_base_path_ = "";
+// The folder to look in relative to the base path
+const std::string TextureManager::TEXTURE_FOLDER_ = "images";
 #ifdef _WIN32
 	const char TextureManager::PATH_SEPERATOR_ = '\\';
 #else
@@ -25,7 +28,7 @@ void TextureManager::init()
 
 		// Get the base texture path of the application
 		char* path = SDL_GetBasePath();
-		texture_base_path_ = std::string(path) + "images";
+		texture_base_path_ = std::string(path) + TEXTURE_FOLDER_ + PATH_SEPERATOR_;
 		SDL_free(path);
 	}
 }
@@ -56,7 +59,7 @@ TextureHandle TextureManager::load( std::string filename )
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, name );
 
-	loaded = load_bmp( texture_base_path_ + PATH_SEPERATOR_ + filename );
+	loaded = load_bmp( texture_base_path_ + filename );
 
 	if( loaded )
 	{

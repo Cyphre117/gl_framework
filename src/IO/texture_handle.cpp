@@ -13,8 +13,8 @@ void TextureHandle::bind( GLuint texture_unit )
 	glActiveTexture( GL_TEXTURE0 + texture_unit );
 	glBindTexture( GL_TEXTURE_2D, name_ );
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_s);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);	
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_s );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter );
 }

@@ -19,6 +19,7 @@ public:
 private:
 	static bool setup_default_values_;
 	static std::string texture_base_path_;
+	static const std::string TEXTURE_FOLDER_;
 	static const char PATH_SEPERATOR_;
 	
 	std::map<std::string, GLuint> texture_cache_;

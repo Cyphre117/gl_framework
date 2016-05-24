@@ -2,13 +2,19 @@
 #include <fstream>
 #include <sstream>
 
+// Shader base path is found by SDL the first time it is needed
+std::string ShaderProgram::shader_base_path_ = "";
+// The folder to look in relative to the base path
+const std::string ShaderProgram::SHADER_FOLDER_ = "shaders";
+#ifdef _WIN32
+    const char ShaderProgram::PATH_SEPERATOR_ = '\\';
+#else
+    const char ShaderProgram::PATH_SEPERATOR_ = '/';
+#endif
+
 ShaderProgram::ShaderProgram() :
 vertex_shader_(0),
-fragment_shader_(0),
-tex_wrap_s_( GL_REPEAT ),
-tex_warp_t_( GL_REPEAT ),
-tex_min_filter_( GL_NEAREST ),
-tex_mag_filter_( GL_NEAREST )
+fragment_shader_(0)
 {}
 
 bool ShaderProgram::init()
@@ -77,7 +83,7 @@ bool ShaderProgram::init()
 
         // now cleanup the shaders
         // TODO: it's possible we want to the same vertex/fagment/etc. shader multple times in different programs
-        // TODO: find a way of supporting this without the caller having to do extra work
+        // TODO: find a way of supporting this without the caller having to do extra work, on the other hand it might not be worth it
         glDetachShader( program_, vertex_shader_ );
         glDetachShader( program_, fragment_shader_ );
         glDeleteShader( vertex_shader_ );
@@ -98,10 +104,6 @@ void ShaderProgram::shutdown()
 void ShaderProgram::bind()
 {
 	glUseProgram( program_ );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex_wrap_s_ );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex_warp_t_ );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, tex_min_filter_ );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex_mag_filter_ );
 }
 
 GLint ShaderProgram::getUniformLocation( const GLchar* name )
@@ -136,13 +138,13 @@ bool ShaderProgram::loadFragmentSourceFile( std::string file_path )
 // TODO: convert this to SDL rw ops and move to seperate header file
 bool ShaderProgram::load_file( std::string filename, std::string* file_contents )
 {
-    std::string projectPath;
+    // Use SDL to get the base resource path the first time only;
+    if( shader_base_path_ == "" )
+    {
+        get_shader_base_path();
+    }
     
-    char* charPath = SDL_GetBasePath();    
-    projectPath = charPath;    
-    SDL_free(charPath);
-
-    std::ifstream file( projectPath + filename );
+    std::ifstream file( shader_base_path_ + filename );
     if( !file.good() )
     {
         SDL_Log("Could not load  %s!", filename.c_str() );
@@ -180,4 +182,16 @@ bool ShaderProgram::did_shader_compile_ok( GLuint shader )
     }
 
     return true;
+}
+
+void ShaderProgram::get_shader_base_path()
+{
+    // Use SDL to get the base path of the exe
+    char* charPath = SDL_GetBasePath();
+
+    // Add the shader folder to the project base path and a seperator on the end
+    shader_base_path_ = std::string(charPath) + SHADER_FOLDER_ + PATH_SEPERATOR_;
+
+    // Free the SDL allocated string
+    SDL_free(charPath);
 }
