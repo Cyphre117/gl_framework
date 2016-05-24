@@ -12,9 +12,9 @@ class TextRenderer
 {
 public:
 	TextRenderer();
-	~TextRenderer() {}
+	~TextRenderer();
 
-	void init( ShaderProgram* shader );
+	void init();
 	void shutdown();
 
 	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );
@@ -24,6 +24,7 @@ public:
 
 	void setWindow( Window* window ) { window_ = window; }
 	void setTexture( TextureHandle texture );
+	void setShader( ShaderProgram* shader );
 
 private:
 	ShaderProgram* text_shader_;
@@ -33,6 +34,13 @@ private:
 	TextureHandle texture_;
 	GLuint vao_;
 	GLuint vbo_;
+
+	static ShaderProgram default_text_shader_;
+	static int num_instances_;
+
+	// Default GLSL source for the text renderer shader
+	static const std::string default_text_vert_src_;
+	static const std::string default_text_frag_src_;
 
 	void pushVert( float x, float y, float u, float v );
 };

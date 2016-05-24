@@ -3,54 +3,77 @@
 #include <sstream>
 
 ShaderProgram::ShaderProgram() :
-good_( true ),
+vertex_shader_(0),
+fragment_shader_(0),
 tex_wrap_s_( GL_REPEAT ),
 tex_warp_t_( GL_REPEAT ),
 tex_min_filter_( GL_NEAREST ),
 tex_mag_filter_( GL_NEAREST )
 {}
 
-void ShaderProgram::init( std::string vertex, std::string fragment )
+bool ShaderProgram::init()
 {
-	{
-		vertex_shader_ = glCreateShader( GL_VERTEX_SHADER );
+    bool success = true;
+    const GLchar* source_ptr = nullptr;
 
-	    // Load the shader to a string and convert to const GLchar*
-	    std::string source = load_file( vertex );
-	    const GLchar* source_ptr = (const GLchar*)source.c_str();
-	    
-	    glShaderSource( vertex_shader_, 1, &source_ptr, NULL );
-	    glCompileShader( vertex_shader_ );
-	
-	    if( !did_shader_compile_ok( vertex_shader_, vertex ) )
-            good_ = false;
-	}    
+    if( !vertex_source_.empty() )
     {
-    	fragment_shader_ = glCreateShader( GL_FRAGMENT_SHADER );
+    	vertex_shader_ = glCreateShader( GL_VERTEX_SHADER );
+        if( vertex_shader_ == 0 )
+        {
+            SDL_Log( "ERROR could not create vertex shader" );
+            success = false;
+        }
 
-        // Load the shader to a string and convert to const GLchar*
-        std::string source = load_file( fragment );
-        const GLchar* source_ptr = (const GLchar*)source.c_str();
+        // Shader strings have to be converted to const GLchar* so OpenGL can compile them
+        source_ptr = (const GLchar*)vertex_source_.c_str();
+        
+        glShaderSource( vertex_shader_, 1, &source_ptr, NULL );
+        glCompileShader( vertex_shader_ );
+
+        if( did_shader_compile_ok( vertex_shader_ ) )
+            vertex_source_.resize(0);
+        else
+            success = false;
+    }
+    else
+    {
+        SDL_Log( "ERROR vertex shader source was empty! (not set)" );
+    }
+
+    if( !fragment_source_.empty() )
+    {
+        // Create the fragment shader
+    	fragment_shader_ = glCreateShader( GL_FRAGMENT_SHADER );
+        if( fragment_shader_ == 0 )
+        {
+            SDL_Log( "ERROR could not create fragment shader" );
+            success = false;
+        }
+
+        // Shader strings have to be converted to const GLchar* so OpenGL can compile them
+        source_ptr = (const GLchar*)fragment_source_.c_str();
         
         glShaderSource( fragment_shader_, 1, &source_ptr , NULL );
         glCompileShader( fragment_shader_ );
 
-        if( !did_shader_compile_ok( fragment_shader_, fragment ) )
-            good_ = false;    
+        if( did_shader_compile_ok( fragment_shader_ ) )
+            fragment_source_.resize(0);
+        else
+            success = false;
+    }
+    else
+    {
+        SDL_Log( "ERROR fragment shader source was empty! (not set)" );
     }
 
-    // Check the vertex and fragment shaders are good
-    if( vertex_shader_ == 0 || fragment_shader_ == 0 ) good_ = false;
-
-    if( good_ ) {
+    if( success ) {
     	 // Create the shader program, attach the vertex and fragment shaders
 	    program_ = glCreateProgram();
 	    glAttachShader( program_, vertex_shader_ );
 	    glAttachShader( program_, fragment_shader_ );
 	    glBindFragDataLocation( program_, 0, "outColour" );
 	    glLinkProgram( program_ );
-
-	    SDL_Log("Compiled %s and %s", vertex.c_str(), fragment.c_str() );
 
         // now cleanup the shaders
         // TODO: it's possible we want to the same vertex/fagment/etc. shader multple times in different programs
@@ -60,6 +83,9 @@ void ShaderProgram::init( std::string vertex, std::string fragment )
         glDeleteShader( vertex_shader_ );
         glDeleteShader( fragment_shader_ ); 
     }
+
+    // Return true on success, false on error
+    return success;
 }
 
 void ShaderProgram::shutdown()
@@ -97,8 +123,18 @@ GLint ShaderProgram::getAttribLocation( const GLchar* name )
     return attribute;
 }
 
+bool ShaderProgram::loadVertexSourceFile( std::string file_path )
+{
+    return load_file( file_path, &vertex_source_ );
+}
+
+bool ShaderProgram::loadFragmentSourceFile( std::string file_path )
+{
+    return load_file( file_path, &fragment_source_ );
+}
+
 // TODO: convert this to SDL rw ops and move to seperate header file
-std::string ShaderProgram::load_file( std::string filename )
+bool ShaderProgram::load_file( std::string filename, std::string* file_contents )
 {
     std::string projectPath;
     
@@ -108,15 +144,20 @@ std::string ShaderProgram::load_file( std::string filename )
 
     std::ifstream file( projectPath + filename );
     if( !file.good() )
+    {
         SDL_Log("Could not load  %s!", filename.c_str() );
+        return false;
+    }
 
     std::stringstream buffer;
     buffer << file.rdbuf();
 
-    return buffer.str();
+    *file_contents = buffer.str();
+
+    return true;
 }
 
-bool ShaderProgram::did_shader_compile_ok( GLuint shader, std::string shader_name )
+bool ShaderProgram::did_shader_compile_ok( GLuint shader )
 {    
     // Check the shader was compiled succesfully
     GLint status;
@@ -132,7 +173,8 @@ bool ShaderProgram::did_shader_compile_ok( GLuint shader, std::string shader_nam
         glGetShaderInfoLog( shader, log_length, NULL, buffer );
 
         // Print the error
-        SDL_Log( "ERROR: compiling fragment shader '%s'", shader_name.c_str() );
+        // TODO: if we have the source then could we print the line that was broken?
+        SDL_Log( "ERROR: compiling shader..." );
         SDL_Log( "%s", buffer );
         return false;
     }

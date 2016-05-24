@@ -13,14 +13,19 @@ public:
 	ShaderProgram();
 	~ShaderProgram() {}
 
-	void init( std::string vertex, std::string fragment );
+	// Returns true if shader compilation was a success, false if there was an error
+	bool init();
 	void shutdown();
 
-	// TODO: replace with error checking in init
-	bool good() { return good_; }
+	// Returns true if the source files were loaded successfully, false if they could not be loaded
+	bool loadVertexSourceFile( std::string file_path );
+	bool loadFragmentSourceFile( std::string file_path ); 
+
+	// Sets the shader source strings directly
+	void setVertexSourceString( const std::string& source ) { vertex_source_ = source; }
+	void setFragmentSourceString( const std::string& source ) { fragment_source_ = source; }
 
 	void bind();
-
 	GLint getUniformLocation( const GLchar* name );
 	GLint getAttribLocation( const GLchar* name );
 	GLint getProgram() { return program_; }
@@ -36,10 +41,12 @@ public:
 
 private:
 
-	// Good if shaders compiled without error
-	bool good_;
-	std::string load_file( std::string filename );
-	bool did_shader_compile_ok( GLuint shader, std::string shader_name );
+	// Loads the text file 'filename' and passes the contents to the pointer
+	bool load_file( std::string filename, std::string* file_contents  );
+	bool did_shader_compile_ok( GLuint shader );
+
+	std::string vertex_source_;
+	std::string fragment_source_;
 
 	GLuint program_;
 	GLuint vertex_shader_;

@@ -6,7 +6,6 @@
 #include <SDL2/SDL.h>
 
 #include "texture_manager.h"
-#include "shader_program.h"
 #include "text_renderer.h"
 #include "window.h"
 #include "camera.h"
@@ -20,9 +19,10 @@ class Application
 {
 public:
 	Application();
-	~Application();
+	~Application() {}
 
-	void init();
+	// Returns false if an error occured during initalisation
+	bool init();
 	void shutdown();
 
 	bool done() { return done_; }
@@ -37,18 +37,16 @@ private:
 	// Scenes
 	Game game_;
 
-	// TODO: give all the systems init and shutdown functions instead of relying on the constructor and detructor?
-	// There could be a flag so check if they were shutdown correctly
+	// TODO: give all the systems init and shutdown functions a return flag to check if they were shutdown correctly
 	// if they wern't then print a warning and try to shutdown
 
 	// Applicaton components
+	TextureManager texture_manager_; // TODO: give text shader built in font, remove this
 	TextRenderer text_;
 	Window window_;
 	Camera camera_;
 	Input input_;
 	Time time_;
-	ShaderProgram text_shader_;
-	TextureManager texture_manager_; // TODO: give text shader built in font, remove this
 
 	std::stack<ApplicationState*> app_stack_;
 };

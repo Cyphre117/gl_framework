@@ -4,16 +4,67 @@
 #include "image_loader.h"
 #include <string>
 
+ShaderProgram TextRenderer::default_text_shader_;
+int TextRenderer::num_instances_ = 0;
+
+const std::string TextRenderer::default_text_vert_src_ = 
+"#version 410 core\n"
+"in vec2 vPosition;"
+"in vec2 vTexCoord;"
+"out vec2 fTexCoord;"
+"void main(){"
+    "fTexCoord = vTexCoord;"
+    "gl_Position = vec4( vPosition, 0.0, 1.0 );"
+"}";
+
+const std::string TextRenderer::default_text_frag_src_ =
+"#version 150 core\n"
+"in vec2 fTexCoord;"
+"out vec4 outColour;"
+"uniform sampler2D font_bitmap;"
+"void main() {"
+   	"vec4 sample = texture(font_bitmap, fTexCoord );"
+   	"if( sample.g < 1.0f )"
+   	"{"
+   		"outColour = vec4( 0.0f, 0.0f, 0.0f, 0.0f );"
+  	"} else {"
+  		"outColour = sample;"
+  	"}"
+"}";
+
 TextRenderer::TextRenderer() :
 text_shader_(nullptr),
 window_(nullptr),
 vao_(0),
 vbo_(0)
-{}
-
-void TextRenderer::init( ShaderProgram* shader )
 {
-    text_shader_ = shader;
+	// Increment the number of text renderer instances
+	num_instances_++;
+}
+
+TextRenderer::~TextRenderer()
+{
+	// Decrement the number of text renderer instances
+	num_instances_--;
+}
+
+void TextRenderer::init()
+{
+	// TODO: hardcode the shader strings
+	// If this is the first instance, create the default shader
+	if( num_instances_ == 1 )
+	{
+		default_text_shader_.setVertexSourceString( default_text_vert_src_ );
+		default_text_shader_.setFragmentSourceString( default_text_frag_src_ );
+		default_text_shader_.init();
+	}
+
+	// If the shader is unset use the default shader
+	if( text_shader_ == nullptr )
+	{
+		text_shader_ = &default_text_shader_;
+	}
+
 	text_shader_->bind();
 
     glGenVertexArrays( 1, &vao_ );
@@ -45,6 +96,11 @@ void TextRenderer::shutdown()
 {
 	glDeleteBuffers( 1, &vbo_ );
 	glDeleteVertexArrays( 1, &vao_ );
+
+	if( num_instances_ == 1 )
+	{
+		default_text_shader_.shutdown();
+	}
 }
 
 void TextRenderer::setTexture( TextureHandle texture )
@@ -52,6 +108,19 @@ void TextRenderer::setTexture( TextureHandle texture )
 	texture.min_filter = GL_NEAREST;
 	texture.mag_filter = GL_NEAREST;
 	texture_ = texture;
+}
+
+void TextRenderer::setShader( ShaderProgram* shader )
+{
+	//If null is passed go back to using the default shader
+	if( shader == nullptr || shader == NULL )
+	{
+		text_shader_ = &default_text_shader_;
+	}
+	else
+	{
+		text_shader_ = shader;		
+	}
 }
 
 void TextRenderer::render()

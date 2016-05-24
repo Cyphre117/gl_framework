@@ -3,11 +3,14 @@
 int main( int argc, char* argv[] )
 {
 	Application application;
-	application.init();
+	bool success = application.init();
 
-	while( !application.done() )
+	if( success )
 	{
-		application.frame();
+		while( !application.done() )
+		{
+			application.frame();
+		}
 	}
 
 	application.shutdown();

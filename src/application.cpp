@@ -1,33 +1,34 @@
 #include "application.h"
 #include "shader_program.h"
 #include "texture_manager.h"
+#include <iostream>
 
 Application::Application() :
 done_(false)
-{
-}
-
-Application::~Application()
-{
-	SDL_Quit();
-}
+{}
 
 // TODO: return error from init function, check in main to shutdown if error
-void Application::init()
+bool Application::init()
 {
 	// Initialise Libraries
-	// TODO: error checking
-	SDL_Init(SDL_INIT_EVERYTHING);
+	if( SDL_Init(SDL_INIT_EVERYTHING) )
+	{
+		std::cout << "Error initalising SDL2: " << SDL_GetError() << std::endl;
+		return false;
+	}
 
 	// Initialise systems
 	window_.init( "system", 800, 600 );
-	text_shader_.init( "shaders/text.vs", "shaders/text.fs" );
-	input_.init();
+
 	texture_manager_.init();
+
+	input_.setWindow( &window_ );
+	input_.init();
+
 	text_.setWindow( &window_ );
 	text_.setTexture( texture_manager_.load( "font.bmp" ) );
-	text_.init( &text_shader_ );
-	input_.setWindow( &window_ );
+	text_.init();
+
 	camera_.setInput( &input_ );
 	camera_.setWindow( &window_ );
 
@@ -43,6 +44,8 @@ void Application::init()
 
 	// TODO: get window to use sensible defaults
 	window_.setVsync( true );
+
+	return true;
 }
 
 void Application::shutdown()
@@ -50,15 +53,17 @@ void Application::shutdown()
 	// First pop everything off the stack
 	while( !app_stack_.empty() ) app_stack_.pop();
 
-	// shutdown states
+	// shutdown scenes
 	game_.shutdown();
 
 	// shutdown systems
-	texture_manager_.shutdown();
-	window_.shutdown();
-	text_shader_.shutdown();
 	text_.shutdown();
 	input_.shutdown();
+	window_.shutdown();
+	texture_manager_.shutdown();
+
+	// Finally, shutdown libraries
+	SDL_Quit();
 }
 
 void Application::frame()
@@ -94,10 +99,12 @@ void Application::handle_events()
 		case SDL_QUIT:
 			done_ = true;
 			break;
+
 		case SDL_WINDOWEVENT:
 			if( event.window.event == SDL_WINDOWEVENT_RESIZED )
 				window_.updateSizeInfo();
 			break;
+
 		case SDL_KEYDOWN:
 			if( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ) done_ = true;
 			else if( event.key.keysym.scancode == SDL_SCANCODE_LCTRL ) {
@@ -105,10 +112,12 @@ void Application::handle_events()
 					input_.unlockCursor();
 				} else input_.lockCursor();
 			}
+			// TODO: move the screenshot key to something else, what was minecraft again?
 			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
 				window_.saveScreenshot("system_engine_screenshot.bmp");
 			}
 			break;
+
 		case SDL_MOUSEMOTION:
 			input_.handle_mouse_event( event );
 			break;

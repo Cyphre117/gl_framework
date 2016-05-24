@@ -15,7 +15,9 @@ window_(nullptr)
 void Game::init()
 {
 	// We can only set parameters when the shader is bound
-	basic_shader_.init( "shaders/vertex.vs", "shaders/fragment.fs" );
+    basic_shader_.loadVertexSourceFile( "shaders/vertex.vs" );
+    basic_shader_.loadFragmentSourceFile( "shaders/fragment.fs" );
+	basic_shader_.init();
 	basic_shader_.bind();
 
 	uniform_model_matrix_ = basic_shader_.getUniformLocation( "model" );
