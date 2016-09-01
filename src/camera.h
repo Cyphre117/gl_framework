@@ -25,6 +25,11 @@ public:
 
 	void update( float dt );
 
+	void moveBackward();
+	void moveForward();
+	void moveRight();
+	void moveLeft();
+
 	// Forward, back, left, right, up, down
 	// Set to default values in constructor
 	// TODO
@@ -36,19 +41,25 @@ public:
 	//void setDownKey()
 
 	void setPosition( glm::vec3 pos ) { pos_ = pos; }
+	void addVelocity( glm::vec3 vel ) { vel_ += vel; }
+	void setVelocity( glm::vec3 vel ) { vel_ = vel; }
 	void setLookAt( glm::vec3 dir ) { } // TODO
 	void setVerticalFOV( float fov ) { vertical_fov_ = glm::radians(fov); }
 	void setNearFar( float near, float far ) { near_plane_ = near; far_plane_ = far; }
 	void setMoveSpeed( float forwardBack, float leftRight, float upDown );
 	void setRotateSpeed( float horizontal, float vertical );
 
+	glm::vec3 position() { return pos_; }
+	glm::vec3 velocity() { return vel_; }
+
 	void setInput( Input* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }
 
 private:
 
-	glm::vec3 pos_;
-	glm::vec3 dir_;
+	glm::vec3 pos_; // Position
+	glm::vec3 vel_; // Velocity (units/second) 
+	glm::vec3 dir_; // Direction the camera is facing
 	glm::vec3 up_;
 	glm::vec3 right_; // TODO: CALCULATE ME
 

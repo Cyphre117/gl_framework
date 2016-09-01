@@ -125,5 +125,23 @@ bool Game::graphics()
 
 bool Game::physics()
 {
+    // Apply gravity
+    camera_->addVelocity( glm::vec3( 0.0f, -0.5f, 0.0f ) );
+
+    // If the camera is below the XZ plane
+    if( camera_->position().y <= 0.0f )
+    {
+        glm::vec3 pos = camera_->position();
+        glm::vec3 vel = camera_->velocity();
+
+        // Stop the camera from falling
+        camera_->setVelocity( glm::vec3( vel.x, 0.0f, vel.z ) );
+        // Set the positon back onto the plane
+        camera_->setPosition( glm::vec3( pos.x, 0.0f, pos.z ) );
+
+        // TODO: fix shitty friction
+        //camera_->setVelocity( camera_->velocity() * 0.9f );
+    }
+
 	return true;
 }

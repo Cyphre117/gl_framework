@@ -8,7 +8,7 @@
 class TextureManager
 {
 public:
-	TextureManager();
+	TextureManager() {}
 	~TextureManager() {}
 
 	void init();

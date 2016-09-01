@@ -2,6 +2,7 @@
 #include "default_texture.h"
 #include <SDL2/sdl.h>
 
+// True when the default texture has been created
 bool TextureManager::setup_default_values_ = false;
 
 // The base path is found by SDL the first time it is needed
@@ -13,9 +14,6 @@ const std::string TextureManager::TEXTURE_FOLDER_ = "images";
 #else
 	const char TextureManager::PATH_SEPERATOR_ = '/';
 #endif
-
-TextureManager::TextureManager()
-{}
 
 void TextureManager::init()
 {
@@ -30,6 +28,9 @@ void TextureManager::init()
 		char* path = SDL_GetBasePath();
 		texture_base_path_ = std::string(path) + TEXTURE_FOLDER_ + PATH_SEPERATOR_;
 		SDL_free(path);
+
+		// Now the defaults have been set, no need to do them again
+		setup_default_values_ = true;
 	}
 }
 
