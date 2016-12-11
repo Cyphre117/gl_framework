@@ -47,14 +47,6 @@ debug: $(OBJS)
 	@echo "Compiling \033[0;32m$(EXE)\033[0;39m for debuging"
 	@$(CXX) $(LDLIBS) $(OBJS) -o $(EXE)
 
-release: $(OBJS) clean_app create_app
-	@echo "Compiling \033[0;32m$(EXE)\033[0;39m for release"
-	@# TODO: the -O4 flag here doesn't actually apply optimisations as this is during linking, i think it needs to be done during compilation
-	@$(CXX) $(LDLIBS) $(OBJS) -O4 -o ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
-	@# Change the search path for SDL2 so the executable knows where to find it
-	@install_name_tool -change @rpath/SDL2.framework/Versions/A/SDL2 @executable_path/../Frameworks/SDL2.framework/Versions/A/SDL2 ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
-	@echo "\033[0;32mDone\033[0;39m"
-
 $(OBJS):
 	@echo "Compiling \033[0;36m$<\033[0;39m"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -g -c $< -o $@
@@ -70,6 +62,18 @@ depend: .depend
 	@perl -i -pe 's/\\\n//g' .depend
 	@# prepend the buid directory to each output object file
 	@perl -i -pe 's/^/$(BUILD)\//' .depend
+
+
+# The .app creating suff is done with help from this wonderful link
+# http://joseph-long.com/writing/app-bundles-with-a-makefile/
+
+app: $(OBJS) clean_app create_app
+	@echo "Compiling \033[0;32m$(EXE)\033[0;39m for release"
+	@# TODO: the -O4 flag here doesn't actually apply optimisations as this is during linking, i think it needs to be done during compilation
+	@$(CXX) $(LDLIBS) $(OBJS) -O4 -o ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
+	@# Change the search path for SDL2 so the executable knows where to find it
+	@install_name_tool -change @rpath/SDL2.framework/Versions/A/SDL2 @executable_path/../Frameworks/SDL2.framework/Versions/A/SDL2 ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
+	@echo "\033[0;32mDone\033[0;39m"
 
 clean_app:
 	rm -rf "./$(RELEASE)/$(APP_NAME).app/"
