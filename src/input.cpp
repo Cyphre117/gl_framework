@@ -1,5 +1,5 @@
-#include "input.h"
-#include "window.h"
+#include <input.h>
+#include <window.h>
 #include <cstring>
 
 Input::Input() :
@@ -13,6 +13,7 @@ Input::~Input() {}
 
 void Input::init()
 {
+	// NOTE: Documentatin suggests this function cannot fail?
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
 }

@@ -1,4 +1,4 @@
-#include "texture_handle.h"
+#include <IO/texture_handle.h>
 
 TextureHandle::TextureHandle() :
 wrap_s(GL_REPEAT),

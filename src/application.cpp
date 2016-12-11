@@ -1,13 +1,11 @@
-#include "application.h"
-#include "shader_program.h"
-#include "texture_manager.h"
 #include <iostream>
+#include <application.h>
+#include <shader_program.h>
 
 Application::Application() :
 done_(false)
 {}
 
-// TODO: return error from init function, check in main to shutdown if error
 bool Application::init()
 {
 	// Initialise Libraries
@@ -18,16 +16,16 @@ bool Application::init()
 	}
 
 	// Initialise systems
-	window_.init( "system", 800, 600 );
+	if( !window_.init( "system", 800, 600 ) ) return false;
 
-	texture_manager_.init();
+	if( !texture_manager_.init() ) return false;
 
 	input_.setWindow( &window_ );
 	input_.init();
 
 	text_.setWindow( &window_ );
 	text_.setTexture( texture_manager_.load( "font.bmp" ) );
-	text_.init();
+	if( !text_.init() ) return false;
 
 	camera_.setInput( &input_ );
 	camera_.setWindow( &window_ );
@@ -38,7 +36,7 @@ bool Application::init()
 	game_.setCamera( &camera_ );
 	game_.setWindow( &window_ );
 	game_.setTextRenderer( &text_ );
-	game_.init();
+	if( !game_.init() ) return false;
 
 	app_stack_.push( &game_ );
 

@@ -15,7 +15,7 @@ public:
 
 	// TODO: use these to return errors
 	// Init and shutdown do initalisation and cleanup of resources
-	void init( std::string title, unsigned width, unsigned height );
+	bool init( std::string title, unsigned width, unsigned height );
 	void shutdown();
 
 	void present();

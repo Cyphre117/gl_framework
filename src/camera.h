@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "window.h"
+#include <window.h>
 
 class Input;
 
@@ -43,7 +43,7 @@ public:
 	void setPosition( glm::vec3 pos ) { pos_ = pos; }
 	void addVelocity( glm::vec3 vel ) { vel_ += vel; }
 	void setVelocity( glm::vec3 vel ) { vel_ = vel; }
-	void setLookAt( glm::vec3 dir ) { } // TODO
+	void setLookAt( glm::vec3 dir ) { } 				// TODO
 	void setVerticalFOV( float fov ) { vertical_fov_ = glm::radians(fov); }
 	void setNearFar( float near, float far ) { near_plane_ = near; far_plane_ = far; }
 	void setMoveSpeed( float forwardBack, float leftRight, float upDown );

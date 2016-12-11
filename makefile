@@ -1,13 +1,24 @@
-CC=gcc
-CXX=c++
-CXXFLAGS=-std=c++11 -Wall
-CPPFLAGS=-iquote $(SRC_DIR) -iquote $(SRC_DIR)/meshes/ -iquote $(SRC_DIR)/IO -I ./lib
-LDLIBS=-framework SDL2 -framework OpenGL lib/GL/glew.o
-SRC_DIR=src
-BUILD=build
-RELEASE=release
-EXE=engine.out
-APP_NAME=Engine
+# The C compiler
+CC = clang
+# Extra flags given to the C compiler
+#CFLAGS
+
+# The C++ Compiler
+CXX = clang++
+# Extra flags given to the C++ compiler
+CXXFLAGS = -std=c++11 -Wall
+
+# Extra Flags for the C Pre-Procesor
+CPPFLAGS = -I ./$(SRC_DIR) -I ./lib
+
+# Library flags given to the compiler relevant to the linking stage
+LDLIBS = -framework SDL2 -framework OpenGL lib/GL/glew.o
+
+SRC_DIR = src
+BUILD = build
+RELEASE = release
+EXE = engine.out
+APP_NAME = Engine
 
 # Add folders for make to search
 #VPATH = src
@@ -38,7 +49,7 @@ debug: $(OBJS)
 
 release: $(OBJS) clean_app create_app
 	@echo "Compiling \033[0;32m$(EXE)\033[0;39m for release"
-	@# TODO: the -O4 flag here doesn't actually apply optimisations as this is during linking, i think it needs to be done during linking
+	@# TODO: the -O4 flag here doesn't actually apply optimisations as this is during linking, i think it needs to be done during compilation
 	@$(CXX) $(LDLIBS) $(OBJS) -O4 -o ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)
 	@# Change the search path for SDL2 so the executable knows where to find it
 	@install_name_tool -change @rpath/SDL2.framework/Versions/A/SDL2 @executable_path/../Frameworks/SDL2.framework/Versions/A/SDL2 ./$(RELEASE)/$(APP_NAME).app/Contents/MacOS/$(APP_NAME)

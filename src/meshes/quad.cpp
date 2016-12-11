@@ -1,6 +1,6 @@
-#include "quad.h"
-#include "shader_program.h"
-#include "image_loader.h"
+#include <meshes/quad.h>
+#include <shader_program.h>
+#include <image_loader.h>
 
 void QuadMesh::init( ShaderProgram* shader, glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3 )
 {

@@ -1,7 +1,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <cmath>
-#include "camera.h"
-#include "input.h"
+#include <camera.h>
+#include <input.h>
 
 const glm::vec3 UP_Y = glm::vec3( 0.0f, 1.0f, 0.0f );
 

@@ -1,7 +1,7 @@
 #ifndef QUAD_H
 #define QUAD_H
 
-#include "mesh.h"
+#include <meshes/mesh.h>
 
 class ShaderProgram;
 

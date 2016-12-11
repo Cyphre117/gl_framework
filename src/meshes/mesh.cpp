@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include <meshes/mesh.h>
 
 void Mesh::init()
 {

@@ -1,7 +1,7 @@
-#include "text_renderer.h"
-#include "shader_program.h"
-#include "window.h"
-#include "image_loader.h"
+#include <text_renderer.h>
+#include <shader_program.h>
+#include <window.h>
+#include <image_loader.h>
 #include <string>
 
 ShaderProgram TextRenderer::default_text_shader_;
@@ -48,9 +48,12 @@ TextRenderer::~TextRenderer()
 	num_instances_--;
 }
 
-void TextRenderer::init()
+bool TextRenderer::init()
 {
-	// TODO: hardcode the shader strings
+	bool success = true;
+
+	// TODO: hardcode the shader default texture
+
 	// If this is the first instance, create the default shader
 	if( num_instances_ == 1 )
 	{
@@ -77,6 +80,7 @@ void TextRenderer::init()
 	{
 		glUniform1i( sampler, 0 );
 	}
+	else success = false;
 
     GLint posAttrib = text_shader_->getAttribLocation( "vPosition" );
     if( posAttrib != -1 )
@@ -84,12 +88,17 @@ void TextRenderer::init()
 		glEnableVertexAttribArray( posAttrib );
 		glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0 );
 	}
+	else success = false;
+
     GLint texAttrib = text_shader_->getAttribLocation( "vTexCoord" );
 	if( posAttrib != -1 )
 	{
 	    glEnableVertexAttribArray( texAttrib );
 	    glVertexAttribPointer( texAttrib, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)) );
 	}
+	else success = false;
+
+	return success;
 }
 
 void TextRenderer::shutdown()

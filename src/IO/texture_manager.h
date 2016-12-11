@@ -1,7 +1,7 @@
 #ifndef IMAGE_MANAGER_H
 #define IMAGE_MANAGER_H
 
-#include "texture_handle.h"
+#include <IO/texture_handle.h>
 #include <string>
 #include <map>
 
@@ -11,7 +11,7 @@ public:
 	TextureManager() {}
 	~TextureManager() {}
 
-	void init();
+	bool init();		// Returns true on success
 	void shutdown();
 
 	TextureHandle load( std::string filename );

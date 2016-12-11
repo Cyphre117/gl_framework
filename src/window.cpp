@@ -8,7 +8,7 @@ height_(0)
 
 Window::~Window() {}
 
-void Window::init( std::string title, unsigned width, unsigned height )
+bool Window::init( std::string title, unsigned width, unsigned height )
 {
     // Specify the version of OpenGL we want
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -16,29 +16,42 @@ void Window::init( std::string title, unsigned width, unsigned height )
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
     // Create the window ready for OpenGL rendering
-    win_ = SDL_CreateWindow( title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE );
+    win_ = SDL_CreateWindow( title.c_str(),
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            width, height,
+            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE );
+
+    if( win_ == NULL ) {
+        SDL_Log("Could not create SDL_window*: %s\n", SDL_GetError());
+        return false;
+    }
+
     context_ = SDL_GL_CreateContext(win_);
     if( context_ == NULL ) {
-        SDL_Log("SDL_Init failed: %s\n", SDL_GetError());
+        SDL_Log("Could not create gl context: %s\n", SDL_GetError());
+        return false;
     }
 
     // Load OpenGL functions
     glewExperimental = GL_TRUE;
     GLenum error = glewInit();
-    if( error != GLEW_OK )
+    if( error != GLEW_OK ) {
         SDL_Log("Failed to init glew");
+        return false;
+    }
 
     // Get openGL version
     SDL_Log("OpenGL version %s", glGetString( GL_VERSION ) );
 
     setClearColour( 0.0, 0.0, 0.0, 1.0 );
-    
     enable( GL_BLEND );
     setBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     enable( GL_DEPTH_TEST );
 
     SDL_GetWindowSize( win_, &width_, &height_ );
 
+    // If we got to here, assume initialization went fine
+    return true;
 }
 
 void Window::shutdown()

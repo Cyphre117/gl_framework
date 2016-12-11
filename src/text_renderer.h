@@ -1,8 +1,8 @@
 #ifndef TEXT_RENDERER_H
 #define TEXT_RENDERER_H
 
-#include "shader_program.h"
-#include "texture_handle.h"
+#include <shader_program.h>
+#include <IO/texture_handle.h>
 #include <string>
 #include <vector>
 
@@ -14,7 +14,7 @@ public:
 	TextRenderer();
 	~TextRenderer();
 
-	void init();
+	bool init();
 	void shutdown();
 
 	void putChar( unsigned char c, float x, float y, unsigned int size_pixels );

@@ -1,23 +1,25 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include "game.h"
-#include "input.h"
-#include "time.h"
-#include "camera.h"
-#include "window.h"
-#include "text_renderer.h"
+#include <game.h>
+#include <input.h>
+#include <game_time.h>
+#include <camera.h>
+#include <window.h>
+#include <text_renderer.h>
 
 Game::Game() :
 window_(nullptr)
 {}
 
-void Game::init()
+bool Game::init()
 {
+    bool success = true;
+
 	// We can only set parameters when the shader is bound
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
     basic_shader_.loadFragmentSourceFile( "fragment.fs" );
-	basic_shader_.init();
+	if( !basic_shader_.init() ) success = false;
 	basic_shader_.bind();
 
 	uniform_model_matrix_ = basic_shader_.getUniformLocation( "model" );
@@ -61,6 +63,8 @@ void Game::init()
 
     // Lock and hide the cursor
     input_->lockCursor();
+
+    return success;
 }
 
 void Game::shutdown()

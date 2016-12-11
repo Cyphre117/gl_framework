@@ -2,10 +2,10 @@
 #define GAME_H
 
 #include <glm/glm.hpp>
-#include "application_state.h"
-#include "texture_manager.h"
-#include "shader_program.h"
-#include "quad.h"
+#include <state.h>
+#include <IO/texture_manager.h>
+#include <shader_program.h>
+#include <meshes/quad.h>
 
 class Input;
 class Time;
@@ -13,13 +13,13 @@ class Window;
 class Camera;
 class TextRenderer;
 
-class Game : public ApplicationState
+class Game : public State
 {
 public:
 	Game();
 	virtual ~Game() {}
 
-	void init() override;
+	bool init() override;
 	void shutdown() override;
 
 	bool frame() override;

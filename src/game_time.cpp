@@ -1,4 +1,4 @@
-#include "time.h"
+#include "game_time.h"
 
 Time::Time() :
 ticks_(0),
