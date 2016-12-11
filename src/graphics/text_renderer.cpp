@@ -1,7 +1,7 @@
-#include <text_renderer.h>
-#include <shader_program.h>
-#include <window.h>
-#include <image_loader.h>
+#include "text_renderer.h"
+#include <graphics/image_loader.h>
+#include <graphics/shader_program.h>
+#include <system/window.h>
 #include <string>
 
 ShaderProgram TextRenderer::default_text_shader_;

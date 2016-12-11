@@ -2,9 +2,9 @@
 #define GAME_H
 
 #include <glm/glm.hpp>
-#include <state.h>
-#include <IO/texture_manager.h>
-#include <shader_program.h>
+#include <system/state.h>
+#include <graphics/texture_manager.h>
+#include <graphics/shader_program.h>
 #include <meshes/quad.h>
 
 class Input;
@@ -12,6 +12,7 @@ class Time;
 class Window;
 class Camera;
 class TextRenderer;
+class TextureManager;
 
 class Game : public State
 {
@@ -37,8 +38,8 @@ private:
 	Window* window_;
 	Camera* camera_;
 	TextRenderer* text_;
-
-	TextureManager texture_manager_;
+	TextureManager* texture_manager_;
+	
 	TextureHandle default_;
 
 	ShaderProgram basic_shader_;

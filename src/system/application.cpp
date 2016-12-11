@@ -1,6 +1,7 @@
+#include "application.h"
 #include <iostream>
-#include <application.h>
-#include <shader_program.h>
+#include <graphics/shader_program.h>
+#include <graphics/texture_manager.h>
 
 Application::Application() :
 done_(false)
@@ -18,13 +19,13 @@ bool Application::init()
 	// Initialise systems
 	if( !window_.init( "system", 800, 600 ) ) return false;
 
-	if( !texture_manager_.init() ) return false;
+	texture_manager_ = TextureManager::get();
 
 	input_.setWindow( &window_ );
 	input_.init();
 
 	text_.setWindow( &window_ );
-	text_.setTexture( texture_manager_.load( "font.bmp" ) );
+	text_.setTexture( texture_manager_->load( "font.bmp" ) );
 	if( !text_.init() ) return false;
 
 	camera_.setInput( &input_ );
@@ -58,7 +59,7 @@ void Application::shutdown()
 	text_.shutdown();
 	input_.shutdown();
 	window_.shutdown();
-	texture_manager_.shutdown();
+	texture_manager_->shutdown();
 
 	// Finally, shutdown libraries
 	SDL_Quit();

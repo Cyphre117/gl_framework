@@ -1,12 +1,13 @@
+#include "game.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <game.h>
-#include <input.h>
-#include <game_time.h>
-#include <camera.h>
-#include <window.h>
-#include <text_renderer.h>
+#include <system/input.h>
+#include <system/game_time.h>
+#include <system/camera.h>
+#include <system/window.h>
+#include <graphics/text_renderer.h>
+#include <graphics/texture_manager.h>
 
 Game::Game() :
 window_(nullptr)
@@ -15,6 +16,8 @@ window_(nullptr)
 bool Game::init()
 {
     bool success = true;
+
+    texture_manager_ = TextureManager::get();
 
 	// We can only set parameters when the shader is bound
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
@@ -59,7 +62,7 @@ bool Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
-    default_ = texture_manager_.load( "default.bmp" );
+    default_ = texture_manager_->load( "default.bmp" );
 
     // Lock and hide the cursor
     input_->lockCursor();

@@ -1,4 +1,4 @@
-#include <image_loader.h>
+#include <graphics/image_loader.h>
 #include <fstream>
 #include <SDL2/sdl.h>
 

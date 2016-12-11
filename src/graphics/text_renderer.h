@@ -1,8 +1,8 @@
 #ifndef TEXT_RENDERER_H
 #define TEXT_RENDERER_H
 
-#include <shader_program.h>
-#include <IO/texture_handle.h>
+#include <graphics/shader_program.h>
+#include <graphics/texture_handle.h>
 #include <string>
 #include <vector>
 

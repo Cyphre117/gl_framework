@@ -1,6 +1,8 @@
-#include <IO/texture_manager.h>
-#include <IO/default_texture.h>
+#include "texture_manager.h"
+#include <graphics/default_texture.h>
 #include <SDL2/sdl.h>
+
+TextureManager* TextureManager::self_ = nullptr;
 
 // True when the default texture has been created
 bool TextureManager::setup_default_values_ = false;
@@ -8,37 +10,52 @@ bool TextureManager::setup_default_values_ = false;
 // The base path is found by SDL the first time it is needed
 std::string TextureManager::texture_base_path_ = "";
 // The folder to look in relative to the base path
-const std::string TextureManager::TEXTURE_FOLDER_ = "images";
+#define TEXTURE_FOLDER "images"
+
 #ifdef _WIN32
-	const char TextureManager::PATH_SEPERATOR_ = '\\';
+	#define PATH_SEPERATOR "\\"
 #else
-	const char TextureManager::PATH_SEPERATOR_ = '/';
+	#define PATH_SEPERATOR "/"
 #endif
+
+TextureManager* TextureManager::get()
+{
+	if( self_ == nullptr )
+	{
+		self_ = new TextureManager();
+		self_->init();
+	}
+
+	return self_;
+}
 
 bool TextureManager::init()
 {
-	// Only run the first time any texture manager is initialized
-	if( setup_default_values_ == false )
+	bool success = true;
+
+	// Create a default texture
+	glBindTexture( GL_TEXTURE_2D, 0 );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_FLOAT, default_texture_data );
+	glGenerateMipmap( GL_TEXTURE_2D );
+
+	// Get the base texture path of the application
+	char* path = SDL_GetBasePath();
+	if( path == NULL ) {
+		SDL_Log("Could not get texture base path: %s\n", SDL_GetError());
+		success = false;
+	}
+	texture_base_path_ = std::string(path) + TEXTURE_FOLDER + PATH_SEPERATOR;
+	SDL_free(path);
+
+	// Now the defaults have been set, no need to do them again
+	setup_default_values_ = true;
+
+	if( !success )
 	{
-		// Create a default texture
-		glBindTexture( GL_TEXTURE_2D, 0 );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_FLOAT, default_texture_data );
-		glGenerateMipmap( GL_TEXTURE_2D );
-
-		// Get the base texture path of the application
-		char* path = SDL_GetBasePath();
-		if( path == NULL ) {
-			SDL_Log("Could not get texture base path: %s\n", SDL_GetError());
-			return false;
-		}
-		texture_base_path_ = std::string(path) + TEXTURE_FOLDER_ + PATH_SEPERATOR_;
-		SDL_free(path);
-
-		// Now the defaults have been set, no need to do them again
-		setup_default_values_ = true;
+		delete self_;
 	}
 
-	return true;
+	return success;
 }
 
 void TextureManager::shutdown()

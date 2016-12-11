@@ -5,13 +5,14 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
-#include <IO/texture_manager.h>
-#include <text_renderer.h>
-#include <window.h>
-#include <camera.h>
-#include <input.h>
-#include <game_time.h>
-#include <game.h>
+#include <graphics/text_renderer.h>
+#include <system/window.h>
+#include <system/camera.h>
+#include <system/input.h>
+#include <system/game_time.h>
+#include <system/game.h>
+
+class TextureManager;
 
 class Application
 {
@@ -39,7 +40,7 @@ private:
 	// if they wern't then print a warning and try to shutdown
 
 	// Applicaton components
-	TextureManager texture_manager_; // TODO: give text shader built in font, remove this
+	TextureManager* texture_manager_; // TODO: give text shader built in font, remove this
 	TextRenderer text_;
 	Window window_;
 	Camera camera_;

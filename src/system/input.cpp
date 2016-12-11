@@ -1,5 +1,5 @@
-#include <input.h>
-#include <window.h>
+#include "input.h"
+#include <system/window.h>
 #include <cstring>
 
 Input::Input() :
