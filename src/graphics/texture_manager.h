@@ -16,25 +16,25 @@ class TextureManager
 {
 public:
 	static TextureManager* get();
-	void shutdown();
+	virtual ~TextureManager();
 
 	TextureHandle load( std::string filename );
+	void unload( TextureHandle );
 
 private:
 	static TextureManager* self_;
 
 	TextureManager() {}
-	~TextureManager() {}
 
 	bool init();							// Returns true on success
-	static bool setup_default_values_;
-	static std::string texture_base_path_;
-	//const std::string TEXTURE_FOLDER_;
-	//const char PATH_SEPERATOR_;
+	std::string texture_base_path_;			// the path to the folder from which audio is loaded
+	std::string extract_filetype( const std::string& filename );	// Returns the file extension after the dot e.g. "png"
 	
 	std::map<std::string, GLuint> texture_cache_;
 
 	bool load_bmp( std::string filepath );
+	bool load_png( std::string filepath );
+	bool load_ppm( std::string filepath );
 };
 
 #endif

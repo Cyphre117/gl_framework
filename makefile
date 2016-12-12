@@ -12,7 +12,7 @@ CXXFLAGS = -std=c++11 -Wall
 CPPFLAGS = -I ./$(SRC_DIR) -I ./lib
 
 # Library flags given to the compiler relevant to the linking stage
-LDLIBS = -framework SDL2 -framework OpenGL lib/GL/glew.o
+LDLIBS = -framework SDL2 -framework OpenGL lib/GL/libGLEW.a
 
 SRC_DIR = src
 BUILD = build

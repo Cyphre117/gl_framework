@@ -2,6 +2,7 @@
 #include <iostream>
 #include <graphics/shader_program.h>
 #include <graphics/texture_manager.h>
+#include <system/helpers.h>
 
 Application::Application() :
 done_(false)
@@ -59,7 +60,7 @@ void Application::shutdown()
 	text_.shutdown();
 	input_.shutdown();
 	window_.shutdown();
-	texture_manager_->shutdown();
+	DeleteNull( texture_manager_ )
 
 	// Finally, shutdown libraries
 	SDL_Quit();

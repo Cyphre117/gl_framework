@@ -14,7 +14,7 @@ struct TextureHandle
 	GLint min_filter;
 	GLint mag_filter;
 
-	void bind( GLuint texture_unit );
+	void bind( GLuint texture_unit = 0 );
 
 private:
 	friend class TextureManager;

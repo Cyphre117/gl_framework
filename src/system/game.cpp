@@ -62,7 +62,7 @@ bool Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
-    default_ = texture_manager_->load( "default.bmp" );
+    default_ = texture_manager_->load( "default.png" );
 
     // Lock and hide the cursor
     input_->lockCursor();
@@ -75,6 +75,7 @@ void Game::shutdown()
     for( int i = 0; i < 3; ++i )
 	   quad_[i].shutdown();
 
+    texture_manager_->unload( default_ );
 	input_->unlockCursor();
 	basic_shader_.shutdown();
 }
