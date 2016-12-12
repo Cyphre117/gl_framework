@@ -1,7 +1,7 @@
 #include "texture_manager.h"
-#include <graphics/default_texture.h>
-#include <SDL2/sdl.h>
+#include <graphics/default_texture.inl>
 #include <graphics/pico_png.inl>
+#include <SDL2/sdl.h>
 #include <fstream>
 
 TextureManager* TextureManager::self_ = nullptr;

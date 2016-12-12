@@ -1,5 +1,4 @@
 #include "text_renderer.h"
-#include <graphics/image_loader.h>
 #include <graphics/shader_program.h>
 #include <system/window.h>
 #include <string>

@@ -62,7 +62,7 @@ bool Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
-    default_ = texture_manager_->load( "default.png" );
+    default_ = texture_manager_->load( "default.ppm" );
 
     // Lock and hide the cursor
     input_->lockCursor();
