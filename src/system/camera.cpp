@@ -23,8 +23,21 @@ window_(nullptr)
 {	
 }
 
- void Camera::update( float dt )
- {
+bool Camera::init()
+{
+	input_ = InputManager::get();
+	window_ = Window::get();
+
+	return true;
+}
+
+void Camera::shutdown()
+{
+
+}
+
+void Camera::update( float dt )
+{
 
 	// apply vertical rotation
 	glm::vec3 new_dir = glm::rotate( dir_, vertical_rotate_speed_ * dt * -input_->yMotion(), right_ );

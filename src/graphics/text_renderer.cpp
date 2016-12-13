@@ -53,6 +53,8 @@ bool TextRenderer::init()
 
 	// TODO: hardcode the shader default texture
 
+	window_ = Window::get();
+
 	// If this is the first instance, create the default shader
 	if( num_instances_ == 1 )
 	{

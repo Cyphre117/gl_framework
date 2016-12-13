@@ -16,7 +16,8 @@ cursor_locked_(false)
 
 bool InputManager::init()
 {
-	// NOTE: Documentatin suggests this function cannot fail?
+	window_ = Window::get();
+
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
 

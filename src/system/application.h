@@ -12,8 +12,6 @@
 #include <system/game_time.h>
 #include <game.h>
 
-class TextureManager;
-
 class Application
 {
 public:

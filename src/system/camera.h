@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <system/window.h>
+#include <system/singleton.h>
 
 class InputManager;
 
@@ -12,6 +13,9 @@ class Camera
 public:
 	Camera();
 	~Camera() {}
+
+	bool init();
+	void shutdown();
 
 	//glm::vec3 position() const { return pos_; }
 	//glm::vec3 direction() const { return dir_; }
@@ -52,7 +56,7 @@ public:
 	glm::vec3 position() { return pos_; }
 	glm::vec3 velocity() { return vel_; }
 
-	void setInput( InputManager* input ) { input_ = input; }
+	//void setInput( InputManager* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }
 
 private:

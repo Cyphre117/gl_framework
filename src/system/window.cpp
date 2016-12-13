@@ -1,14 +1,19 @@
 #include "window.h"
 #include <vector>
 
+Window* Window::self_ = nullptr;
+
 Window::Window() :
-width_(0),
-height_(0)
-{}
+win_(nullptr),
+width_(256),
+height_(256)
+{
+    self_ = this;
+}
 
 Window::~Window() {}
 
-bool Window::init( std::string title, unsigned width, unsigned height )
+bool Window::init()
 {
     // Specify the version of OpenGL we want
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -16,9 +21,9 @@ bool Window::init( std::string title, unsigned width, unsigned height )
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
     // Create the window ready for OpenGL rendering
-    win_ = SDL_CreateWindow( title.c_str(),
+    win_ = SDL_CreateWindow( title_.c_str(),
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            width, height,
+            width_, height_,
             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE );
 
     if( win_ == NULL ) {
@@ -57,6 +62,7 @@ bool Window::init( std::string title, unsigned width, unsigned height )
 void Window::shutdown()
 {
     SDL_DestroyWindow( win_ );
+    win_ = nullptr;
     SDL_GL_DeleteContext( context_ );
 }
 
@@ -85,6 +91,28 @@ void Window::updateSizeInfo()
 {
     SDL_GetWindowSize( win_, &width_, &height_ );
     glViewport( 0, 0, width_, height_ );
+}
+
+void Window::setSize( int width, int height )
+{
+    width_ = width;
+    height_ = height;
+
+    if( win_ )
+    {
+        SDL_SetWindowSize( win_, width_, height_ );
+        updateSizeInfo();
+    }
+}
+
+void Window::setTitle( std::string title )
+{
+    title_ = title;
+
+    if( win_ )
+    {
+        SDL_SetWindowTitle( win_, title_.c_str() );
+    }
 }
 
 void Window::setVsync( bool enable )

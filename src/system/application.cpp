@@ -18,24 +18,22 @@ bool Application::init()
 	}
 
 	// Initialise systems
-	if( !window_.init( "system", 800, 600 ) ) return false;
+	window_.setTitle( "system" );
+	//window_.setSize( 800, 600 );
+	if( !window_.init() ) return false;
 
-	texture_manager_.init();
+	if( !texture_manager_.init() ) return false;
 
-	input_.setWindow( &window_ );
-	input_.init();
+	if( !input_.init() ) return false;
 
-	text_.setWindow( &window_ );
 	text_.setTexture( texture_manager_.load( "font.bmp" ) );
 	if( !text_.init() ) return false;
 
-	camera_.setInput( &input_ );
-	camera_.setWindow( &window_ );
+	if( !camera_.init() ) return false;
 
 	// Initialise states
 	game_.setTime( &time_ );
 	game_.setCamera( &camera_ );
-	game_.setWindow( &window_ );
 	game_.setTextRenderer( &text_ );
 	if( !game_.init() ) return false;
 
@@ -56,10 +54,11 @@ void Application::shutdown()
 	game_.shutdown();
 
 	// shutdown systems
+	camera_.shutdown();
 	text_.shutdown();
 	input_.shutdown();
-	window_.shutdown();
 	texture_manager_.shutdown();
+	window_.shutdown();
 
 	// Finally, shutdown libraries
 	SDL_Quit();
@@ -113,7 +112,9 @@ void Application::handle_events()
 			}
 			// TODO: move the screenshot key to something else, what was minecraft again?
 			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
-				window_.saveScreenshot("system_engine_screenshot.bmp");
+				//window_.saveScreenshot("screenshot.bmp");
+				window_.setSize( 800, 600 );
+
 			}
 			break;
 

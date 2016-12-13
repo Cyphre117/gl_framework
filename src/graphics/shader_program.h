@@ -47,8 +47,8 @@ private:
 	GLuint fragment_shader_;
 
 	static std::string shader_base_path_;
-	static const std::string SHADER_FOLDER_;
-	static const char PATH_SEPERATOR_;
+	//static const std::string SHADER_FOLDER_;
+	//static const char PATH_SEPERATOR_;
 };
 
 #endif

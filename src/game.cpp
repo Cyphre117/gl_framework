@@ -8,6 +8,7 @@
 #include <system/input_manager.h>
 #include <graphics/text_renderer.h>
 #include <graphics/texture_manager.h>
+#include <system/window.h>
 
 Game::Game() :
 window_(nullptr)
@@ -19,6 +20,7 @@ bool Game::init()
 
     texture_manager_ = TextureManager::get();
     input_manager_ = InputManager::get();
+    window_ = Window::get();
 
 	// We can only set parameters when the shader is bound
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
@@ -115,15 +117,15 @@ bool Game::graphics()
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
 
     quad_[0].bind();
-    bunny_.bind( 0 );
+    bunny_.bind();
     quad_[0].draw();
 
     quad_[1].bind();
-    bunny_.bind( 0 );
+    bunny_.bind();
     quad_[1].draw();
 
 	quad_[2].bind();
-    bunny_.bind( 0 );
+    bunny_.bind();
 	quad_[2].draw();
 	
 	text_->render();
