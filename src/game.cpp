@@ -2,10 +2,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <system/input.h>
 #include <system/game_time.h>
 #include <system/camera.h>
 #include <system/window.h>
+#include <system/input_manager.h>
 #include <graphics/text_renderer.h>
 #include <graphics/texture_manager.h>
 
@@ -18,6 +18,7 @@ bool Game::init()
     bool success = true;
 
     texture_manager_ = TextureManager::get();
+    input_manager_ = InputManager::get();
 
 	// We can only set parameters when the shader is bound
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
@@ -62,10 +63,10 @@ bool Game::init()
 		glm::vec3( 1.5f, -2.0f, -1.5f)    	
     	);
 
-    default_ = texture_manager_->load( "default.ppm" );
+    bunny_ = texture_manager_->load( "bunny.png" );
 
     // Lock and hide the cursor
-    input_->lockCursor();
+    input_manager_->lockCursor();
 
     return success;
 }
@@ -75,8 +76,8 @@ void Game::shutdown()
     for( int i = 0; i < 3; ++i )
 	   quad_[i].shutdown();
 
-    texture_manager_->unload( default_ );
-	input_->unlockCursor();
+    texture_manager_->unload( bunny_ );
+	input_manager_->unlockCursor();
 	basic_shader_.shutdown();
 }
 
@@ -114,15 +115,15 @@ bool Game::graphics()
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
 
     quad_[0].bind();
-    default_.bind( 0 );
+    bunny_.bind( 0 );
     quad_[0].draw();
 
     quad_[1].bind();
-    default_.bind( 0 );
+    bunny_.bind( 0 );
     quad_[1].draw();
 
 	quad_[2].bind();
-    default_.bind( 0 );
+    bunny_.bind( 0 );
 	quad_[2].draw();
 	
 	text_->render();

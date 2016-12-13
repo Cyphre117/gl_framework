@@ -7,7 +7,7 @@
 #include <graphics/shader_program.h>
 #include <meshes/quad.h>
 
-class Input;
+class InputManager;
 class Time;
 class Window;
 class Camera;
@@ -25,7 +25,6 @@ public:
 
 	bool frame() override;
 
-	void setInput( Input* input ) { input_ = input; }
 	void setTime( Time* time ) { time_ = time; }
 	void setCamera( Camera* camera ) { camera_ = camera; }
 	void setWindow( Window* window ) { window_ = window; }
@@ -33,14 +32,14 @@ public:
 
 private:
 
-	Input* input_;
+	TextureManager* texture_manager_;
+	InputManager* input_manager_;
 	Time* time_;
 	Window* window_;
 	Camera* camera_;
 	TextRenderer* text_;
-	TextureManager* texture_manager_;
 	
-	TextureHandle default_;
+	TextureHandle bunny_;
 
 	ShaderProgram basic_shader_;
 	GLint uniform_model_matrix_;

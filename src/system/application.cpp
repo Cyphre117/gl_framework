@@ -20,20 +20,19 @@ bool Application::init()
 	// Initialise systems
 	if( !window_.init( "system", 800, 600 ) ) return false;
 
-	texture_manager_ = TextureManager::get();
+	texture_manager_.init();
 
 	input_.setWindow( &window_ );
 	input_.init();
 
 	text_.setWindow( &window_ );
-	text_.setTexture( texture_manager_->load( "font.bmp" ) );
+	text_.setTexture( texture_manager_.load( "font.bmp" ) );
 	if( !text_.init() ) return false;
 
 	camera_.setInput( &input_ );
 	camera_.setWindow( &window_ );
 
 	// Initialise states
-	game_.setInput( &input_ );
 	game_.setTime( &time_ );
 	game_.setCamera( &camera_ );
 	game_.setWindow( &window_ );
@@ -60,7 +59,7 @@ void Application::shutdown()
 	text_.shutdown();
 	input_.shutdown();
 	window_.shutdown();
-	DeleteNull( texture_manager_ )
+	texture_manager_.shutdown();
 
 	// Finally, shutdown libraries
 	SDL_Quit();

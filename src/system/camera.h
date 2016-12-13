@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <system/window.h>
 
-class Input;
+class InputManager;
 
 class Camera
 {
@@ -52,7 +52,7 @@ public:
 	glm::vec3 position() { return pos_; }
 	glm::vec3 velocity() { return vel_; }
 
-	void setInput( Input* input ) { input_ = input; }
+	void setInput( InputManager* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }
 
 private:
@@ -73,7 +73,7 @@ private:
 	float forward_move_speed_;
 	float strafe_move_speed_;
 
-	Input* input_;
+	InputManager* input_;
 	Window* window_;
 };
 

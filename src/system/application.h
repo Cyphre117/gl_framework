@@ -8,9 +8,9 @@
 #include <graphics/text_renderer.h>
 #include <system/window.h>
 #include <system/camera.h>
-#include <system/input.h>
+#include <system/input_manager.h>
 #include <system/game_time.h>
-#include <system/game.h>
+#include <game.h>
 
 class TextureManager;
 
@@ -40,11 +40,11 @@ private:
 	// if they wern't then print a warning and try to shutdown
 
 	// Applicaton components
-	TextureManager* texture_manager_; // TODO: give text shader built in font, remove this
+	TextureManager texture_manager_;
+	InputManager input_;
 	TextRenderer text_;
 	Window window_;
 	Camera camera_;
-	Input input_;
 	Time time_;
 
 	std::stack<State*> app_stack_;

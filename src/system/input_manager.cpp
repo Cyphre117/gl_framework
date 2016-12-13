@@ -1,24 +1,29 @@
-#include "input.h"
+#include "input_manager.h"
 #include <system/window.h>
 #include <cstring>
 
-Input::Input() :
+
+InputManager* InputManager::self_ = nullptr;
+
+InputManager::InputManager() :
 keyboard_state_(nullptr),
 old_keyboard_state_(nullptr),
 num_keys_(0),
 cursor_locked_(false)
-{}
+{
+	self_ = this;
+}
 
-Input::~Input() {}
-
-void Input::init()
+bool InputManager::init()
 {
 	// NOTE: Documentatin suggests this function cannot fail?
 	keyboard_state_ = SDL_GetKeyboardState( &num_keys_ );
 	old_keyboard_state_ = new Uint8[ num_keys_ ];
+
+	return true;
 }
 
-void Input::shutdown()
+void InputManager::shutdown()
 {
 	if( old_keyboard_state_ ) {
 		delete old_keyboard_state_;
@@ -26,7 +31,7 @@ void Input::shutdown()
 	}
 }
 
-void Input::store_input()
+void InputManager::store_input()
 {
 	// Copy last frames keyboard state to the old state array
 	std::memcpy( old_keyboard_state_, keyboard_state_, num_keys_ );
@@ -35,7 +40,7 @@ void Input::store_input()
 	mouse_state_.yrel = 0;
 }
 
-void Input::handle_mouse_event( const SDL_Event& event )
+void InputManager::handle_mouse_event( const SDL_Event& event )
 {
 	if( event.type == SDL_MOUSEMOTION && cursor_locked_ )
 	{
@@ -44,14 +49,14 @@ void Input::handle_mouse_event( const SDL_Event& event )
 	}
 }
 
-void Input::lockCursor() { 
+void InputManager::lockCursor() { 
     SDL_WarpMouseInWindow( window_->window(), window_->width()/2, window_->height()/2 );
     SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_ShowCursor(SDL_DISABLE);
     cursor_locked_ = true;
 }
 
-void Input::unlockCursor() {
+void InputManager::unlockCursor() {
 	SDL_SetRelativeMouseMode(SDL_FALSE);
 	SDL_ShowCursor(SDL_ENABLE);
 	cursor_locked_ = false;

@@ -2,12 +2,9 @@
 #include <graphics/default_texture.inl>
 #include <graphics/pico_png.inl>
 #include <SDL2/sdl.h>
-#include <fstream>
 
 TextureManager* TextureManager::self_ = nullptr;
 
-// The base path is found by SDL the first time it is needed
-//std::string TextureManager::texture_base_path_ = "";
 // The folder to look in relative to the base path
 #define TEXTURE_FOLDER "images"
 
@@ -17,18 +14,7 @@ TextureManager* TextureManager::self_ = nullptr;
 	#define PATH_SEPERATOR "/"
 #endif
 
-TextureManager* TextureManager::get()
-{
-	if( self_ == nullptr )
-	{
-		self_ = new TextureManager();
-		self_->init();
-	}
-
-	return self_;
-}
-
-TextureManager::~TextureManager()
+void TextureManager::shutdown()
 {
 	for( auto it = texture_cache_.begin(); it != texture_cache_.end(); ++it )
 	{
@@ -53,11 +39,6 @@ bool TextureManager::init()
 	}
 	texture_base_path_ = std::string(path) + TEXTURE_FOLDER + PATH_SEPERATOR;
 	SDL_free(path);
-
-	if( !success )
-	{
-		delete self_;
-	}
 
 	return success;
 }
@@ -90,11 +71,12 @@ TextureHandle TextureManager::load( std::string filename )
 	{
 		loaded = load_png( texture_base_path_ + filename );
 	}
-	else if( extension == "ppm" )
+	else if( extension == "ppm" || extension == "pbm" || extension == "pgm" )
 	{
 		loaded = load_ppm( texture_base_path_ + filename );
 	}
 
+	// Check if the file was loaded ok
 	if( loaded )
 	{
 		// Generate the mip maps
@@ -106,10 +88,9 @@ TextureHandle TextureManager::load( std::string filename )
 	}
 	else
 	{
-		SDL_Log( "Could not load '%s'", filename.c_str() );
+		SDL_Log( "Could not load '%s%s'", texture_base_path_.c_str(), filename.c_str() );
 		glDeleteTextures( 1, &name );
 	}
-
 	return texture;
 }
 
@@ -174,6 +155,12 @@ bool TextureManager::load_png( std::string filepath )
 	unsigned long width = 0, height = 0;
 	int error = decodePNG( image, width, height, buffer.data(), buffer.size() );
 
+	if( width != height )
+	{
+		SDL_Log("png image %s is not square!", filepath.c_str());
+		return success;
+	}
+
 	if( error == 0 )
 	{
 		success = true;
@@ -186,7 +173,120 @@ bool TextureManager::load_png( std::string filepath )
 bool TextureManager::load_ppm( std::string filepath )
 {
 	bool success = false;
+
+	// Load the file into a vector
+	std::ifstream file( filepath.c_str() );
+
+	// Get the file size
+	std::streamsize size = 0;
+	if(file.seekg(0, std::ios::end).good()) size = file.tellg();
+	if(file.seekg(0, std::ios::beg).good()) size -= file.tellg();
+
+	// If the file was empty, quit
+	if( size <= 2 ) {
+		return success;
+	}
+
+	// The first two chars of a ppm are the magic number, consisting of a 'P' followed by 1-6 depending on the type
+	if( file.get() != 'P' ) {
+		SDL_Log(".ppm had unknown magic number");
+		return success;
+	}
+
+	std::vector<unsigned char> image;
+	char type = file.get();
+	int width = 0, height = 0, depth = 0;
+
+	// TODO: figure out how to decode binary ppm types
+
+	read_ppm_number( file, width );
+	read_ppm_number( file, height );
+
+	// Ensure the image is square
+	if( width != height )
+	{
+		SDL_Log("ppm image %s is not square!", filepath.c_str());
+		return success;
+	}
+
+	// Type 1 is a black and white 1 bit image
+	if( type == '1' )
+	{
+		std::string s;
+
+		while( file )
+		{
+			s = file.get();
+			if( s[0] == '0') {
+				image.push_back(255);
+			} else if( s[0] == '1' ) {
+				image.push_back(0);
+			} else if( s[0] == '#') {
+				std::getline( file, s );
+			}
+		}
+	}
+
+	// types 2 and 3 are grey and rgb respectively
+	if( type == '2' || type == '3' )
+	{
+		read_ppm_number( file, depth );
+	
+		std::string s;
+
+		while( file )
+		{
+			file >> s;
+			if( s == "#" ) {
+				std::getline( file, s );
+			} else if( !s.empty() ) {
+				image.push_back( (std::stoi( s ) / (float)depth) * 255 );
+			}
+		}
+	}
+
+	switch( type )
+	{
+	case '1': // ASCII 0-1 (black & white)
+	case '2': // ASCII 0-255 (grey)
+		success = true;
+		// 1 channel data
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, image.data() );
+	break;
+	case '3': // ASCII 0-255 x3 (RGB)
+		success = true;
+		// 3 channel data
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.data() );
+	break;
+	case '4': // Binary 0-1 (black & white)
+		SDL_Log("ERROR: cannot decode binary ppm type %d", type);
+	break;
+	case '5': // Binary 0-255 (grey)
+		SDL_Log("ERROR: cannot decode binary ppm type %d", type);
+	break;
+	case '6': // Binary 0-255 x3 (RGB)
+		SDL_Log("ERROR: cannot decode binary ppm type %d", type);
+	break;
+	default: // Unknown
+		SDL_Log("ERROR: Trying to decode .ppm file with unknown magic number");
+	break;	
+	}
+
 	return success;
+}
+
+void TextureManager::read_ppm_number( std::ifstream& file, int& num )
+{
+	std::string s;
+	while( file ) { // read untill we got the width
+		file >> s;
+		if( s == "#" ) {
+			std::getline( file, s );
+		} else {
+			num = std::stoi(s);
+			break;
+		}
+	}
 }
 
 std::string TextureManager::extract_filetype( const std::string& filename )

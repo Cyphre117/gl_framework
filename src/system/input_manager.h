@@ -1,15 +1,16 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUT_MANAGER_H
+#define INPUT_MANAGER_H
 
 #include <SDL2/SDL.h>
+#include <system/singleton.h>
 
 class Window;
 
-class Input
+class InputManager : public Singleton
 {
 public:
-	Input();
-	~Input();
+	InputManager();
+	~InputManager() {}
 
 	//TODO
 	// - mouse position
@@ -18,8 +19,10 @@ public:
 	// - hide / show cursor
 	// - lock cursor to window
 
-	void init();
+	bool init();
 	void shutdown();
+
+	static InputManager* get() { return self_; }
 
 	// Saves the current state so we can compare states with last fame
 	void store_input();
@@ -37,6 +40,8 @@ public:
 	bool isReleased( SDL_Scancode sc ) const { return !keyboard_state_[sc] && old_keyboard_state_[sc]; }
 
 private:
+	static InputManager* self_;
+
 	const Uint8* keyboard_state_;
 	Uint8* old_keyboard_state_;
 	int num_keys_;
