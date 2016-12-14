@@ -23,8 +23,8 @@ public:
 	void clear( GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 	void updateSizeInfo();
-	void enable( GLenum cap )					{ glEnable( cap ); }
-	void disable( GLenum cap )					{ glDisable( cap ); }
+	void enable( GLenum cap ) { glEnable( cap ); }
+	void disable( GLenum cap ) { glDisable( cap ); }
 	void saveScreenshot( const char * filename );
 
 	void setTitle( std::string title );
@@ -33,10 +33,10 @@ public:
 	void setClearColour( float r, float g, float b, float a );
 	void setVsync( bool enable );
 
-	int width()							const { return width_; }
-	int height()						const { return height_; }
-	SDL_GLContext context()				const { return context_; }
-	SDL_Window* window()				const { return win_; }
+	int width() const { return width_; }
+	int height() const { return height_; }
+	SDL_GLContext context() const { return context_; }
+	SDL_Window* window() const { return win_; }
 
 private:
 	static Window* self_;

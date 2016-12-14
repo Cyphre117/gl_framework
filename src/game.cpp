@@ -20,6 +20,7 @@ bool Game::init()
 
     texture_manager_ = TextureManager::get();
     input_manager_ = InputManager::get();
+    audio_manager_ = AudioManager::get();
     window_ = Window::get();
 
 	// We can only set parameters when the shader is bound
@@ -67,6 +68,10 @@ bool Game::init()
 
     bunny_ = texture_manager_->load( "bunny.png" );
 
+    audio_buffer_ = audio_manager_->load( "powerup.wav" );
+    audio_source_ = audio_manager_->newSource();
+    audio_source_.play( audio_buffer_ );
+
     // Lock and hide the cursor
     input_manager_->lockCursor();
 
@@ -78,8 +83,11 @@ void Game::shutdown()
     for( int i = 0; i < 3; ++i )
 	   quad_[i].shutdown();
 
-    texture_manager_->unload( bunny_ );
+    texture_manager_->unload( &bunny_ );
+    audio_manager_->unload( &audio_buffer_ );
+    audio_manager_->deleteSource( &audio_source_ );
 	input_manager_->unlockCursor();
+
 	basic_shader_.shutdown();
 }
 

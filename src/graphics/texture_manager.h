@@ -26,7 +26,7 @@ public:
 	static TextureManager* get() { return self_; }
 
 	TextureHandle load( std::string filename );
-	void unload( TextureHandle );
+	void unload( TextureHandle* tex );
 
 private:
 	static TextureManager* self_;

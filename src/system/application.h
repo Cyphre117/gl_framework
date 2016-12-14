@@ -9,6 +9,7 @@
 #include <system/window.h>
 #include <system/camera.h>
 #include <system/input_manager.h>
+#include <audio/audio_manager.h>
 #include <system/game_time.h>
 #include <game.h>
 
@@ -40,6 +41,7 @@ private:
 	// Applicaton components
 	TextureManager texture_manager_;
 	InputManager input_;
+	AudioManager audio_manager_;
 	TextRenderer text_;
 	Window window_;
 	Camera camera_;

@@ -5,6 +5,7 @@
 #include <system/state.h>
 #include <graphics/texture_manager.h>
 #include <graphics/shader_program.h>
+#include <audio/audio_manager.h>
 #include <meshes/quad.h>
 
 class InputManager;
@@ -34,12 +35,15 @@ private:
 
 	TextureManager* texture_manager_;
 	InputManager* input_manager_;
+	AudioManager* audio_manager_;
 	Time* time_;
 	Window* window_;
 	Camera* camera_;
 	TextRenderer* text_;
 	
 	TextureHandle bunny_;
+	AudioSource audio_source_;
+	AudioBuffer audio_buffer_;
 
 	ShaderProgram basic_shader_;
 	GLint uniform_model_matrix_;

@@ -94,14 +94,15 @@ TextureHandle TextureManager::load( std::string filename )
 	return texture;
 }
 
-void TextureManager::unload( TextureHandle tex )
+void TextureManager::unload( TextureHandle* tex )
 {
 	for( auto it = texture_cache_.begin(); it != texture_cache_.end(); it++ )
 	{
-		if( it->second == tex.name_ )
+		if( it->second == tex->name_ )
 		{
 			// If we found the texture handle, clean it up and erase it from the cache
-			glDeleteTextures( 1, &tex.name_);
+			glDeleteTextures( 1, &tex->name_);
+			tex->name_ = 0;
 
 			texture_cache_.erase(it);
 			return;

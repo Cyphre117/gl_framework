@@ -13,16 +13,21 @@ bool Application::init()
 	// Initialise Libraries
 	if( SDL_Init(SDL_INIT_EVERYTHING) )
 	{
-		std::cout << "Error initalising SDL2: " << SDL_GetError() << std::endl;
+		SDL_Log( "Error initalising SDL2: %s", SDL_GetError() );
 		return false;
 	}
 
 	// Initialise systems
 	window_.setTitle( "system" );
-	//window_.setSize( 800, 600 );
+	window_.setSize( 800, 600 );
 	if( !window_.init() ) return false;
+	// TODO: get window to use sensible defaults
+	// TODO: what if I do this before calling init???
+	window_.setVsync( true );
 
 	if( !texture_manager_.init() ) return false;
+
+	if( !audio_manager_.init() ) return false;
 
 	if( !input_.init() ) return false;
 
@@ -39,9 +44,6 @@ bool Application::init()
 
 	app_stack_.push( &game_ );
 
-	// TODO: get window to use sensible defaults
-	window_.setVsync( true );
-
 	return true;
 }
 
@@ -57,6 +59,7 @@ void Application::shutdown()
 	camera_.shutdown();
 	text_.shutdown();
 	input_.shutdown();
+	audio_manager_.shutdown();
 	texture_manager_.shutdown();
 	window_.shutdown();
 
@@ -112,8 +115,7 @@ void Application::handle_events()
 			}
 			// TODO: move the screenshot key to something else, what was minecraft again?
 			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
-				//window_.saveScreenshot("screenshot.bmp");
-				window_.setSize( 800, 600 );
+				window_.saveScreenshot("screenshot.bmp");
 
 			}
 			break;
