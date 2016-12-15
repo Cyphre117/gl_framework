@@ -36,10 +36,10 @@ private:
 	TextureManager* texture_manager_;
 	InputManager* input_manager_;
 	AudioManager* audio_manager_;
+	TextRenderer* text_;			// TODO:
 	Time* time_;
 	Window* window_;
 	Camera* camera_;
-	TextRenderer* text_;
 	
 	TextureHandle bunny_;
 	AudioSource audio_source_;

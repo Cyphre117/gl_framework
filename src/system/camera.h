@@ -60,6 +60,7 @@ public:
 	void setWindow( Window* window ) { window_ = window; }
 
 private:
+	void updateAudioListener();
 
 	glm::vec3 pos_; // Position
 	glm::vec3 vel_; // Velocity (units/second) 

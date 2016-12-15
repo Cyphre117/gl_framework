@@ -63,13 +63,15 @@ bool Game::init()
     	glm::vec3(-1.5f, -2.0f,  1.5f),
 		glm::vec3( 1.5f, -2.0f,  1.5f),
 		glm::vec3(-1.5f, -2.0f, -1.5f),
-		glm::vec3( 1.5f, -2.0f, -1.5f)    	
+		glm::vec3( 1.5f, -2.0f, -1.5f)
     	);
 
     bunny_ = texture_manager_->load( "bunny.png" );
 
     audio_buffer_ = audio_manager_->load( "powerup.wav" );
     audio_source_ = audio_manager_->newSource();
+    //audio_source_.setPitch( 2.0f );
+    audio_source_.setLooping( true );
     audio_source_.play( audio_buffer_ );
 
     // Lock and hide the cursor

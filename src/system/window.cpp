@@ -147,6 +147,9 @@ void Window::saveScreenshot( const char * filename )
     glReadPixels( 0, 0, width_, height_, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 
     SDL_Surface * surf = SDL_CreateRGBSurfaceFrom( pixels.data(), width_, height_, 8 * 4, width_ * 4, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000 );
+ 
+    // TODO: flip this upsidown. Use a line by line SDL_BlitSurface?
+
     SDL_SaveBMP( surf, filename );
 
     SDL_FreeSurface(surf);
