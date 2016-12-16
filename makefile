@@ -8,11 +8,11 @@ CXX = clang++
 # Extra flags given to the C++ compiler
 CXXFLAGS = -std=c++11 -Wall
 
-# Extra Flags for the C Pre-Procesor
-CPPFLAGS = -I ./$(SRC_DIR) -I ./lib
+# Extra Flags for the C Pre-Processor
+CPPFLAGS = -I ./$(SRC_DIR) -I ./lib -I /usr/local/include/bullet/
 
 # Library flags given to the compiler relevant to the linking stage
-LDLIBS = -framework SDL2 -framework OpenGL -framework OpenAL lib/GL/libGLEW.a
+LDLIBS = -framework SDL2 -framework OpenGL -framework OpenAL -lBulletDynamics -lBulletCollision -lLinearMath lib/GL/libGLEW.a
 
 SRC_DIR = src
 BUILD = build

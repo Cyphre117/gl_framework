@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 #include <graphics/text_renderer.h>
+#include <physics/physics_world.h>
 #include <system/window.h>
 #include <system/camera.h>
 #include <system/input_manager.h>
@@ -43,6 +44,7 @@ private:
 	InputManager input_;
 	AudioManager audio_manager_;
 	TextRenderer text_;
+	PhysicsWorld physics_world_;
 	Window window_;
 	Camera camera_;
 	Time time_;

@@ -29,9 +29,11 @@ bool Application::init()
 
 	if( !audio_manager_.init() ) return false;
 
+	if( !physics_world_.init() ) return false;
+
 	if( !input_.init() ) return false;
 
-	text_.setTexture( texture_manager_.load( "font.bmp" ) );
+	text_.setTexture( texture_manager_.load( "font.png" ) );
 	if( !text_.init() ) return false;
 
 	if( !camera_.init() ) return false;
@@ -59,6 +61,7 @@ void Application::shutdown()
 	camera_.shutdown();
 	text_.shutdown();
 	input_.shutdown();
+	physics_world_.shutdown();
 	audio_manager_.shutdown();
 	texture_manager_.shutdown();
 	window_.shutdown();
@@ -116,7 +119,6 @@ void Application::handle_events()
 			// TODO: move the screenshot key to something else, what was minecraft again?
 			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
 				window_.saveScreenshot("screenshot.bmp");
-
 			}
 			break;
 

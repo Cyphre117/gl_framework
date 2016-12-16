@@ -5,6 +5,7 @@
 #include <system/state.h>
 #include <graphics/texture_manager.h>
 #include <graphics/shader_program.h>
+#include <physics/physics_world.h>
 #include <audio/audio_manager.h>
 #include <meshes/quad.h>
 
@@ -36,14 +37,17 @@ private:
 	TextureManager* texture_manager_;
 	InputManager* input_manager_;
 	AudioManager* audio_manager_;
-	TextRenderer* text_;			// TODO:
-	Time* time_;
+	PhysicsWorld* physics_world_;
+	TextRenderer* text_;
 	Window* window_;
 	Camera* camera_;
+	Time* time_;
 	
 	TextureHandle bunny_;
 	AudioSource audio_source_;
 	AudioBuffer audio_buffer_;
+
+	btRigidBody* sphere_1_;
 
 	ShaderProgram basic_shader_;
 	GLint uniform_model_matrix_;
