@@ -16,7 +16,7 @@ Game::Game()
 , audio_manager_(nullptr)
 , physics_world_(nullptr)
 , window_(nullptr)
-, camera_(nullptr)
+, player_(nullptr)
 , time_(nullptr)
 , sphere_1_(nullptr)
 {}
@@ -30,10 +30,11 @@ bool Game::init()
     audio_manager_ = AudioManager::get();
     physics_world_ = PhysicsWorld::get();
     window_ = Window::get();
+    player_ = Player::get();
 
     // Do this to set the audio listener position to the camera
     // position from the moment the app is run
-    camera_->update(0);
+    player_->update(0);
 
 	// We can only set parameters when the shader is bound
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
@@ -145,7 +146,7 @@ bool Game::update()
 {
 	text_->putString("Hello world", -0.95, 0.95, 32 );
 
-	camera_->update( time_->dt() );
+	player_->update( time_->dt() );
 
 	return true;
 }
@@ -156,8 +157,8 @@ bool Game::graphics()
 
 	basic_shader_.bind();
     glm::mat4 model_matrix_ = glm::mat4(1.0f);
-    glm::mat4 view_matrix_ = camera_->view();
-    glm::mat4 projection_matrix_ = camera_->projection();
+    glm::mat4 view_matrix_ = player_->camera()->view();
+    glm::mat4 projection_matrix_ = player_->camera()->projection();
     glUniformMatrix4fv( uniform_model_matrix_, 1, GL_FALSE, glm::value_ptr( model_matrix_ ) );
     glUniformMatrix4fv( uniform_view_matrix_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
     glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
@@ -191,6 +192,7 @@ bool Game::physics()
 {
     physics_world_->update( time_->dt() );
 
+    /*
     // Apply gravity
     camera_->addVelocity( glm::vec3( 0.0f, -0.5f, 0.0f ) );
 
@@ -207,7 +209,7 @@ bool Game::physics()
 
         // TODO: fix shitty friction
         //camera_->setVelocity( camera_->velocity() * 0.9f );
-    }
+    }*/
 
 	return true;
 }

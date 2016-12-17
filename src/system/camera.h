@@ -53,15 +53,15 @@ public:
 	void setMoveSpeed( float forwardBack, float leftRight, float upDown );
 	void setRotateSpeed( float horizontal, float vertical );
 
-	glm::vec3 position() { return pos_; }
-	glm::vec3 velocity() { return vel_; }
+	glm::vec3 position() const { return pos_; }
+	glm::vec3 velocity() const { return vel_; }
+	glm::vec3 direction() const { return dir_; }
+	glm::vec3 up() const { return up_; }
 
 	//void setInput( InputManager* input ) { input_ = input; }
 	void setWindow( Window* window ) { window_ = window; }
 
 private:
-	void updateAudioListener();
-
 	glm::vec3 pos_; // Position
 	glm::vec3 vel_; // Velocity (units/second) 
 	glm::vec3 dir_; // Direction the camera is facing

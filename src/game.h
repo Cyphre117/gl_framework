@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <system/state.h>
+#include <gameplay/player.h>
 #include <graphics/texture_manager.h>
 #include <graphics/shader_program.h>
 #include <physics/physics_world.h>
@@ -28,7 +29,6 @@ public:
 	bool frame() override;
 
 	void setTime( Time* time ) { time_ = time; }
-	void setCamera( Camera* camera ) { camera_ = camera; }
 	void setWindow( Window* window ) { window_ = window; }
 	void setTextRenderer( TextRenderer* text ) { text_ = text; }
 
@@ -40,7 +40,7 @@ private:
 	PhysicsWorld* physics_world_;
 	TextRenderer* text_;
 	Window* window_;
-	Camera* camera_;
+	Player* player_;
 	Time* time_;
 	
 	TextureHandle bunny_;

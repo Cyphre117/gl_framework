@@ -87,21 +87,6 @@ void Camera::update( float dt )
 
 	// Reset the velocity read for next update
 	//vel_ = glm::vec3( 0.0f, 0.0f, 0.0f );
-
-	updateAudioListener();
-}
-
-void Camera::updateAudioListener()
-{
-	alListener3f( AL_POSITION, pos_.x, pos_.y, pos_.z );
-	alListener3f( AL_VELOCITY, vel_.x, vel_.y, vel_.z );
-
-	ALfloat orientation[] = {
-		pos_.x + dir_.x, pos_.y + dir_.y, pos_.z + dir_.z,
-		up_.x, up_.y, up_.z
-	};
-
-	alListenerfv( AL_ORIENTATION, orientation );
 }
 
 void Camera::setMoveSpeed( float forwardBack, float leftRight, float upDown )

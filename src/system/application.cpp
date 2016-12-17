@@ -36,11 +36,10 @@ bool Application::init()
 	text_.setTexture( texture_manager_.load( "font.png" ) );
 	if( !text_.init() ) return false;
 
-	if( !camera_.init() ) return false;
+	if( !player_.init() ) return false;
 
 	// Initialise states
 	game_.setTime( &time_ );
-	game_.setCamera( &camera_ );
 	game_.setTextRenderer( &text_ );
 	if( !game_.init() ) return false;
 
@@ -58,7 +57,7 @@ void Application::shutdown()
 	game_.shutdown();
 
 	// shutdown systems
-	camera_.shutdown();
+	player_.shutdown();
 	text_.shutdown();
 	input_.shutdown();
 	physics_world_.shutdown();

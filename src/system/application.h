@@ -5,13 +5,13 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
+#include <gameplay/player.h>
 #include <graphics/text_renderer.h>
 #include <physics/physics_world.h>
 #include <system/window.h>
-#include <system/camera.h>
 #include <system/input_manager.h>
-#include <audio/audio_manager.h>
 #include <system/game_time.h>
+#include <audio/audio_manager.h>
 #include <game.h>
 
 class Application
@@ -46,7 +46,8 @@ private:
 	TextRenderer text_;
 	PhysicsWorld physics_world_;
 	Window window_;
-	Camera camera_;
+	//Camera camera_;
+	Player player_;
 	Time time_;
 
 	std::stack<State*> app_stack_;
