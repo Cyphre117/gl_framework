@@ -26,16 +26,11 @@ bool Application::init()
 	window_.setVsync( true );
 
 	if( !texture_manager_.init() ) return false;
-
 	if( !audio_manager_.init() ) return false;
-
 	if( !physics_world_.init() ) return false;
-
 	if( !input_.init() ) return false;
-
 	text_.setTexture( texture_manager_.load( "font.png" ) );
 	if( !text_.init() ) return false;
-
 	if( !player_.init() ) return false;
 
 	// Initialise states
@@ -115,8 +110,7 @@ void Application::handle_events()
 					input_.unlockCursor();
 				} else input_.lockCursor();
 			}
-			// TODO: move the screenshot key to something else, what was minecraft again?
-			else if( event.key.keysym.scancode == SDL_SCANCODE_SPACE ) {
+			else if( event.key.keysym.scancode == SDL_SCANCODE_F2 ) {
 				window_.saveScreenshot("screenshot.bmp");
 			}
 			break;

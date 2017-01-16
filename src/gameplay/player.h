@@ -3,6 +3,8 @@
 
 #include <system/singleton.h>
 #include <system/camera.h>
+#include <physics/physics_world.h>
+#include <system/helpers.h>
 
 class Player : public Singleton
 {
@@ -27,7 +29,7 @@ public:
 
 	// Getters
 	Camera* camera() { return &camera_; }
-	glm::vec3 position() { return camera_.position(); }
+	glm::vec3 position() { return pos_; }
 	glm::vec3 velocity() { return vel_; }
 	glm::vec3 direction() { return camera_.direction(); }
 
@@ -36,9 +38,17 @@ protected:
 
 	void updateAudioListener();
 
+	static const float HEIGHT; // Height of the capsule used to represent the player
+	static const float RADIUS; // Radius of the capsule used to represent the player
+
 	Camera camera_;
 	InputManager* input_;
+	PhysicsWorld* physics_world_;
 
+	btRigidBody* capsule_;
+	btMotionState* motion_state_;
+
+	glm::vec3 pos_;
 	glm::vec3 vel_; // Velocity (units/second) 
 	float horizontal_rotate_speed_;
 	float vertical_rotate_speed_;

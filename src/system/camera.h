@@ -15,48 +15,30 @@ public:
 	~Camera() {}
 
 	bool init();
-	void shutdown();
-
-	//glm::vec3 position() const { return pos_; }
-	//glm::vec3 direction() const { return dir_; }
-	//glm::vec3 up() const { return up_; }
+	void shutdown() {}
 	
-	// Returns the camera's view and projection matrices
+	// Setters
+	void setUp( glm::vec3 up ) { up_ = up; }
+	void setRight( glm::vec3 right ) { right_ = right; }
+	void setWindow( Window* window ) { window_ = window; }
+	void setPosition( glm::vec3 pos ) { pos_ = pos; }
+	void setDirection( glm::vec3 dir ) { dir_ = dir; }
+	void setLookAt( glm::vec3 look_at );
+	void setVerticalFOV( float fov ) { vertical_fov_ = glm::radians(fov); }
+	void setNearFar( float near, float far ) { near_plane_ = near; far_plane_ = far; }
+
+	// Getters
+	glm::vec3 position() const { return pos_; }
+	glm::vec3 direction() const { return dir_; }
+	glm::vec3 up() const { return up_; }
+	glm::vec3 right() const { return right_; }
 	glm::mat4 view() const { return glm::lookAt( pos_, pos_ + dir_, up_ ); }
 	glm::mat4 projection() const {
 		return glm::perspective( vertical_fov_, window_->width() / (float)window_->height(), near_plane_, far_plane_ );
 	}
 
-	void update( float dt );
-
-	// Forward, back, left, right, up, down
-	// Set to default values in constructor
-	// TODO
-	//void setForwardKey( SDL_Scancode s ) {}
-	//void setBackwardKey()
-	//void setLeftKey()
-	//void setRightKey()
-	//void setUpKey()
-	//void setDownKey()
-
-	void setPosition( glm::vec3 pos ) { pos_ = pos; }
-	//void setVelocity( glm::vec3 vel ) { vel_ = vel; }
-	void setDirection( glm::vec3 dir ) { dir_ = dir; }
-	void setUp( glm::vec3 up ) { up_ = up; }
-	void setRight( glm::vec3 right ) { right_ = right; }
-	void setLookAt( glm::vec3 dir ) { } 				// TODO
-	void setVerticalFOV( float fov ) { vertical_fov_ = glm::radians(fov); }
-	void setNearFar( float near, float far ) { near_plane_ = near; far_plane_ = far; }
-
-	glm::vec3 position() const { return pos_; }
-	//glm::vec3 velocity() const { return vel_; }
-	glm::vec3 direction() const { return dir_; }
-	glm::vec3 up() const { return up_; }
-	glm::vec3 right() const { return right_; }
-
-	void setWindow( Window* window ) { window_ = window; }
-
 private:
+
 	glm::vec3 pos_; // Position
 	glm::vec3 dir_; // Direction the camera is facing
 	glm::vec3 up_;

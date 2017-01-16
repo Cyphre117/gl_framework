@@ -28,6 +28,23 @@ bool PhysicsWorld::init()
 
 void PhysicsWorld::shutdown()
 {
+	// Delete all the collision objects
+	for( int i = world_->getNumCollisionObjects()-1; i >= 0; i-- )
+	{
+		btCollisionObject* obj = world_->getCollisionObjectArray()[i];
+		btRigidBody* body = btRigidBody::upcast(obj);
+
+		if( body && body->getMotionState() )
+		{
+			delete body->getMotionState();
+		}
+
+		world_->removeCollisionObject( obj );
+		delete obj;
+	}
+
+	// TODO: should also delete collision shapes as noted in the bullet quickstart guide?
+
 	DeleteNull( world_ );
 	DeleteNull( dispatcher_ );
 	DeleteNull( collision_config_ );

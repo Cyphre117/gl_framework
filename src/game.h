@@ -58,7 +58,6 @@ private:
 
 	bool update();
 	bool graphics();
-	bool physics();
 };
 
 #endif

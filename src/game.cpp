@@ -133,8 +133,7 @@ bool Game::frame()
 	if( !update() )
 		return false;
 
-	if( !physics() )
-		return false;
+    physics_world_->update( time_->dt() );
 
 	if( !graphics() )
 		return false;
@@ -178,6 +177,8 @@ bool Game::graphics()
     audio_source_.setPosition( t.getOrigin().x(), t.getOrigin().y(), t.getOrigin().z() );
     glUniformMatrix4fv( uniform_model_matrix_, 1, GL_FALSE, matrix );
 
+    //player_->camera()->setLookAt( glm::vec3(t.getOrigin().x(), t.getOrigin().y(), t.getOrigin().z()) );
+
     quad_[1].bind();
     bunny_.bind();
     quad_[1].draw();
@@ -185,31 +186,5 @@ bool Game::graphics()
 	text_->render();
 
 	window_->present();
-	return true;
-}
-
-bool Game::physics()
-{
-    physics_world_->update( time_->dt() );
-
-    /*
-    // Apply gravity
-    camera_->addVelocity( glm::vec3( 0.0f, -0.5f, 0.0f ) );
-
-    // If the camera is below the XZ plane
-    if( camera_->position().y <= 0.0f )
-    {
-        glm::vec3 pos = camera_->position();
-        glm::vec3 vel = camera_->velocity();
-
-        // Stop the camera from falling
-        camera_->setVelocity( glm::vec3( vel.x, 0.0f, vel.z ) );
-        // Set the positon back onto the plane
-        camera_->setPosition( glm::vec3( pos.x, 0.0f, pos.z ) );
-
-        // TODO: fix shitty friction
-        //camera_->setVelocity( camera_->velocity() * 0.9f );
-    }*/
-
 	return true;
 }
