@@ -41,7 +41,6 @@ bool PhysicsDebugRenderer::init( ShaderProgram* shader )
 
 void PhysicsDebugRenderer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-	/*
 	lines_.push_back(from.x());
 	lines_.push_back(from.y());
 	lines_.push_back(from.z());
@@ -49,32 +48,15 @@ void PhysicsDebugRenderer::drawLine(const btVector3& from, const btVector3& to, 
 	lines_.push_back(color.y());
 	lines_.push_back(color.z());
 	lines_.push_back(to.x());
-	lines_.push_back(to.x());
-	lines_.push_back(to.x());
+	lines_.push_back(to.y());
+	lines_.push_back(to.z());
 	lines_.push_back(color.x());
 	lines_.push_back(color.y());
 	lines_.push_back(color.z());
-	//*/
-
-	//*
-	GLfloat verts[] = {
-		from.x(), from.y(), from.z(), color.x(), color.y(), color.z(),
-		to.x(), to.y(), to.z(), color.x(), color.y(), color.z()
-	};
-	//*/
-
-    glBindVertexArray( vao_ );
-    glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
-
-    glBufferData( GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW );
-	glDrawArrays( GL_LINES, 0, 2 );
-
-	lines_.clear();
 }
 
 void PhysicsDebugRenderer::flushLines()
 {
-	/*
     glBindVertexArray( vao_ );
     glBindBuffer( GL_ARRAY_BUFFER, vbo_ );
 
@@ -83,5 +65,5 @@ void PhysicsDebugRenderer::flushLines()
 
 	std::cout << "Drawing " << lines_.size()/6 << " verts" << std::endl;
 
-	lines_.clear();*/
+	lines_.clear();
 }
