@@ -8,6 +8,8 @@
 #include <system/input_manager.h>
 #include <graphics/text_renderer.h>
 #include <graphics/texture_manager.h>
+#include <physics/physics_world.h>
+#include <physics/physics_debug_renderer.h>
 #include <system/window.h>
 
 Game::Game()
@@ -40,11 +42,19 @@ bool Game::init()
     basic_shader_.loadVertexSourceFile( "vertex.vs" );
     basic_shader_.loadFragmentSourceFile( "fragment.fs" );
 	if( !basic_shader_.init() ) success = false;
-	basic_shader_.bind();
 
-	uniform_model_matrix_ = basic_shader_.getUniformLocation( "model" );
-	uniform_view_matrix_ = basic_shader_.getUniformLocation( "view" );
-	uniform_projection_matrix_ = basic_shader_.getUniformLocation( "projection" );
+	basic_shader_.bind();
+	basic_model_matrix_uniform_ = basic_shader_.getUniformLocation( "model" );
+	basic_view_matrix_uniform_ = basic_shader_.getUniformLocation( "view" );
+	basic_projection_matrix_uniform_ = basic_shader_.getUniformLocation( "projection" );
+
+    debug_lines_shader_.loadVertexSourceFile( "debug_lines.vs" );
+    debug_lines_shader_.loadFragmentSourceFile( "debug_lines.fs" );
+    if( !debug_lines_shader_.init() ) success = false;
+
+    debug_lines_shader_.bind();
+    debug_view_matrix_uniform_ = debug_lines_shader_.getUniformLocation( "view" );
+    debug_projection_matrix_uniform_ = debug_lines_shader_.getUniformLocation( "projection" );
 
     quad_[0].init(
     	&basic_shader_,
@@ -71,6 +81,11 @@ bool Game::init()
     	);
 
     bunny_ = texture_manager_->load( "bunny.png" );
+
+    // Register the physics debug drawer
+    PhysicsDebugRenderer* debug_renderer = new PhysicsDebugRenderer();
+    debug_renderer->init( &debug_lines_shader_ );
+    physics_world_->setDebugDrawer( debug_renderer );
 
     audio_buffer_ = audio_manager_->load( "powerup.wav" );
     audio_source_ = audio_manager_->newSource();
@@ -153,14 +168,14 @@ bool Game::update()
 bool Game::graphics()
 {
 	window_->clear();
-
-	basic_shader_.bind();
     glm::mat4 model_matrix_ = glm::mat4(1.0f);
     glm::mat4 view_matrix_ = player_->camera()->view();
     glm::mat4 projection_matrix_ = player_->camera()->projection();
-    glUniformMatrix4fv( uniform_model_matrix_, 1, GL_FALSE, glm::value_ptr( model_matrix_ ) );
-    glUniformMatrix4fv( uniform_view_matrix_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
-    glUniformMatrix4fv( uniform_projection_matrix_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
+
+	basic_shader_.bind();
+    glUniformMatrix4fv( basic_model_matrix_uniform_, 1, GL_FALSE, glm::value_ptr( model_matrix_ ) );
+    glUniformMatrix4fv( basic_view_matrix_uniform_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
+    glUniformMatrix4fv( basic_projection_matrix_uniform_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
 
     quad_[0].bind();
     bunny_.bind();
@@ -175,13 +190,18 @@ bool Game::graphics()
     sphere_1_->getMotionState()->getWorldTransform( t );
     t.getOpenGLMatrix( matrix );
     audio_source_.setPosition( t.getOrigin().x(), t.getOrigin().y(), t.getOrigin().z() );
-    glUniformMatrix4fv( uniform_model_matrix_, 1, GL_FALSE, matrix );
+    glUniformMatrix4fv( basic_model_matrix_uniform_, 1, GL_FALSE, matrix );
 
     //player_->camera()->setLookAt( glm::vec3(t.getOrigin().x(), t.getOrigin().y(), t.getOrigin().z()) );
 
     quad_[1].bind();
     bunny_.bind();
     quad_[1].draw();
+
+    debug_lines_shader_.bind();
+    glUniformMatrix4fv( debug_view_matrix_uniform_, 1, GL_FALSE, glm::value_ptr( view_matrix_ ) );
+    glUniformMatrix4fv( debug_projection_matrix_uniform_, 1, GL_FALSE, glm::value_ptr( projection_matrix_ ) );
+    physics_world_->world()->debugDrawWorld();
 	
 	text_->render();
 

@@ -5,6 +5,7 @@
 #include <system/camera.h>
 #include <physics/physics_world.h>
 #include <system/helpers.h>
+#include <bullet//BulletCollision/CollisionDispatch/btGhostObject.h>
 
 class Player : public Singleton
 {
@@ -18,10 +19,7 @@ public:
 	static Player* get() { return self_; }
 
 	void update( float dt );
-	void moveBackward();
-	void moveForward();
-	void moveRight();
-	void moveLeft();
+	void jump();
 
 	// Setters
 	void setMoveSpeed( float forwardBack, float leftRight, float upDown );

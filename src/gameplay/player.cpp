@@ -31,7 +31,7 @@ bool Player::init()
 	input_ = InputManager::get();
 	physics_world_ = PhysicsWorld::get();
 
-	float mass = 10.0;
+	float mass = 50.0;
 
 	btTransform t;
 	t.setIdentity();
@@ -45,7 +45,6 @@ bool Player::init()
 	info.m_friction = 5.0f;
 
 	capsule_ = new btRigidBody( info );
-	//capsule_->setCollisionFlags( capsule_->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
 	capsule_->setActivationState( DISABLE_DEACTIVATION );
 	capsule_->setAngularFactor( 0.0f ); // Prevent rotation
 	physics_world_->world()->addRigidBody( capsule_ );
@@ -60,7 +59,6 @@ void Player::shutdown()
 
 void Player::update( float dt )
 {
-	//camera_.update( dt );
 	static const glm::vec3 UP_Y = glm::vec3( 0.0f, 1.0f, 0.0f );
 
 	// apply vertical rotation
@@ -87,39 +85,60 @@ void Player::update( float dt )
 	// calculate the new up vector
 	camera_.setUp( glm::cross( camera_.right(), direction() ) );
 
-	// apply side to side movement
-	if( input_->isDown( SDL_SCANCODE_D ) )
-		moveRight();
-	if( input_->isDown( SDL_SCANCODE_A ) )
-		moveLeft();
+	glm::vec3 total_movement(0);
 
-	// apply forward / back
+	// apply forward and back movement
 	if( input_->isDown( SDL_SCANCODE_W ) )
-		moveForward();
+	{
+		glm::vec3 forward( camera_.direction().x, 0, camera_.direction().z );
+		forward = glm::normalize( forward );
+		forward *= forward_move_speed_;
+		total_movement += forward;
+	}
 	if( input_->isDown( SDL_SCANCODE_S ) )
-		moveBackward();
-	
-	// apply up / down
-	if( input_->isDown( SDL_SCANCODE_E ) )
-		vel_ += UP_Y * vertical_move_speed_;
-	if( input_->isDown( SDL_SCANCODE_Q ) )
-		vel_ -= UP_Y * vertical_move_speed_;
+	{
+		glm::vec3 backward( -camera_.direction().x, 0, -camera_.direction().z );
+		backward = glm::normalize( backward );
+		backward *= forward_move_speed_;
+		total_movement += backward;
+	}
 
- 	// Apply the velocty to the position
- 	//camera_.setPosition( position() + vel_ * dt );
+	// apply left and right moevment
+	if( input_->isDown( SDL_SCANCODE_D ) )
+	{
+		glm::vec3 right = glm::normalize( camera_.right() );
+		right *= strafe_move_speed_;
+		total_movement += right;
+	}
+	if( input_->isDown( SDL_SCANCODE_A ) )
+	{
+		glm::vec3 left = glm::normalize( -camera_.right() );
+		left *= strafe_move_speed_;
+		total_movement += left;
+	}
 
-	// Update the position
+	if( input_->isDown( SDL_SCANCODE_SPACE ) && vel_.y == 0 )
+	{
+		capsule_->setLinearVelocity( capsule_->getLinearVelocity() + btVector3(0, 9, 0) );
+		jump();
+	}
+
+	// Only apply horizontal movement
+	glm::vec3 new_vel = glm::vec3( total_movement.x, capsule_->getLinearVelocity().y(), total_movement.z );
+
+ 	// Apply the velocty
+ 	capsule_->setLinearVelocity( glmVec3_btVec3(new_vel) );
+
+	// Update the camera position
 	btTransform t;
 	motion_state_->getWorldTransform( t );
 	pos_ = btVec3_glmVec3( t.getOrigin() );
-
 	camera_.setPosition( pos_ );
 
 	// Update velocity
 	vel_ = btVec3_glmVec3(capsule_->getLinearVelocity());
 
 	updateAudioListener();
-
 }
 
 void Player::updateAudioListener()
@@ -152,60 +171,7 @@ void Player::setRotateSpeed( float horizontal, float vertical )
 	vertical_rotate_speed_ = vertical;
 }
 
-void Player::moveForward()
+void Player::jump()
 {
-	glm::vec3 forward( camera_.direction().x, 0, camera_.direction().z );
-	forward = glm::normalize( forward );
-	forward *= forward_move_speed_;
-	capsule_->setLinearVelocity( glmVec3_btVec3(forward) );
-	/*
-	// set the velocity if
-	// the old velocity and new velocity are pointing in different directions (away from each other)
-	// OR the old velocity is less than the new velocity
-	if( ((vel_.x > 0.0f) != (direction().x > 0.0f)) || std::abs(vel_.x) < std::abs(direction().x * forward_move_speed_) )
-	{
-		vel_.x = direction().x * forward_move_speed_;
-	}
-	if( (vel_.y > 0.0f) != (direction().y > 0.0f) || std::abs(vel_.y) < std::abs(direction().y * forward_move_speed_) )
-	{
-		vel_.y = direction().y * forward_move_speed_;
-	}
-	if( (vel_.z > 0.0f) != (direction().z > 0.0f) || std::abs(vel_.z) < std::abs(direction().z * forward_move_speed_) )
-	{
-		vel_.z = direction().z * forward_move_speed_;
-	}*/
-}
-
-void Player::moveBackward()
-{
-	glm::vec3 forward( camera_.direction().x, 0, camera_.direction().z );
-	forward = glm::normalize( forward );
-	forward *= -forward_move_speed_;
-	capsule_->setLinearVelocity( glmVec3_btVec3(forward) );
-
-	/*
-	if( ((vel_.x > 0.0f) != (-direction().x > 0.0f)) || std::abs(vel_.x) < std::abs(direction().x * forward_move_speed_) )
-	{
-		vel_.x = -direction().x * forward_move_speed_;
-	}
-	if( (vel_.y > 0.0f) != (-direction().y > 0.0f) || std::abs(vel_.y) < std::abs(direction().y * forward_move_speed_) )
-	{
-		vel_.y = -direction().y * forward_move_speed_;
-	}
-	if( (vel_.z > 0.0f) != (-direction().z > 0.0f) || std::abs(vel_.z) < std::abs(direction().z * forward_move_speed_) )
-	{
-		vel_.z = -direction().z * forward_move_speed_;
-	}*/
-}
-
-// TODO: make this work like forward
-void Player::moveRight()
-{
-	vel_ += camera_.right() * strafe_move_speed_;
-}
-
-// TODO: make this work like forward
-void Player::moveLeft()
-{
-	vel_ -= camera_.right() * strafe_move_speed_;
+	// http://bulletphysics.org/mediawiki-1.5.8/index.php/Collision_Callbacks_and_Triggers
 }

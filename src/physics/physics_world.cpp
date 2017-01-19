@@ -1,4 +1,5 @@
 #include "physics_world.h"
+#include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <system/helpers.h>
 
 PhysicsWorld* PhysicsWorld::self_ = nullptr;
@@ -22,6 +23,9 @@ bool PhysicsWorld::init()
 	solver_ = new btSequentialImpulseConstraintSolver();
 	world_ = new btDiscreteDynamicsWorld( dispatcher_, broadphase_, solver_, collision_config_ );
 	setGravity( gravity_ );
+
+	// Required for ghost object to work correctly
+	world_->getPairCache()->setInternalGhostPairCallback( new btGhostPairCallback() );
 
 	return true;
 }
@@ -55,6 +59,11 @@ void PhysicsWorld::shutdown()
 void PhysicsWorld::update( float dt )
 {
 	world_->stepSimulation( dt );
+}
+
+void PhysicsWorld::setDebugDrawer( btIDebugDraw* debug_drawer )
+{
+	world_->setDebugDrawer( debug_drawer );
 }
 
 void PhysicsWorld::setGravity( glm::vec3 g )

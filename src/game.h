@@ -6,7 +6,6 @@
 #include <gameplay/player.h>
 #include <graphics/texture_manager.h>
 #include <graphics/shader_program.h>
-#include <physics/physics_world.h>
 #include <audio/audio_manager.h>
 #include <meshes/quad.h>
 
@@ -16,6 +15,7 @@ class Window;
 class Camera;
 class TextRenderer;
 class TextureManager;
+class PhysicsWorld;
 
 class Game : public State
 {
@@ -50,9 +50,13 @@ private:
 	btRigidBody* sphere_1_;
 
 	ShaderProgram basic_shader_;
-	GLint uniform_model_matrix_;
-	GLint uniform_view_matrix_;
-	GLint uniform_projection_matrix_;
+	GLint basic_model_matrix_uniform_;
+	GLint basic_view_matrix_uniform_;
+	GLint basic_projection_matrix_uniform_;
+
+	ShaderProgram debug_lines_shader_;
+	GLint debug_view_matrix_uniform_;
+	GLint debug_projection_matrix_uniform_;
 
     QuadMesh quad_[3];
 

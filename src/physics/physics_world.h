@@ -19,6 +19,7 @@ public:
 	void update( float dt );
 
 	// Setters
+	void setDebugDrawer( btIDebugDraw* debug_drawer );
 	void setGravity( glm::vec3 g );
 
 	// Getters
