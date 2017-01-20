@@ -76,17 +76,23 @@ app: $(OBJS) clean_app create_app
 	@echo "\033[0;32mDone\033[0;39m"
 
 clean_app:
-	rm -rf "./$(RELEASE)/$(APP_NAME).app/"
+	@echo "\033[0;33mCleaning Application\033[0;39m"
+	@rm -rf "./$(RELEASE)/$(APP_NAME).app/"
 
 create_app:
 	@echo "\033[0;33mCreating app structure\033[0;39m"
 	@mkdir -p "./$(RELEASE)/$(APP_NAME).app"/Contents/{MacOS,Resources,Frameworks}
-	@cp Info.plist "./$(RELEASE)/$(APP_NAME).app/Contents/"
+	@cp ./app_resources/Info.plist "./$(RELEASE)/$(APP_NAME).app/Contents/"
+	@cp ./app_resources/Icon.icns "./$(RELEASE)/$(APP_NAME).app/Contents/Resources/"
 	@sed -e "s/APP_NAME/$(APP_NAME)/g" -i "" "./$(RELEASE)/$(APP_NAME).app/Contents/Info.plist"
 	@echo "\033[0;33mBundling resources\033[0;39m"
 	@cp -R "/Library/Frameworks/SDL2.framework" "./$(RELEASE)/$(APP_NAME).app/Contents/Frameworks/"
+	@#@cp -R "/usr/local/lib/libBulletDynamics.a" "./$(RELEASE)/$(APP_NAME).app/Contents/Frameworks/"
+	@#@cp -R "/usr/local/lib/libBulletDynamics" "./$(RELEASE)/$(APP_NAME).app/Contents/Frameworks/"
+	@#@cp -R "/usr/local/lib/libBulletDynamics" "./$(RELEASE)/$(APP_NAME).app/Contents/Frameworks/"
 	@cp -R ./images "./$(RELEASE)/$(APP_NAME).app/Contents/Resources/"
 	@cp -R ./shaders "./$(RELEASE)/$(APP_NAME).app/Contents/Resources/"
+	@cp -R ./audio "./$(RELEASE)/$(APP_NAME).app/Contents/Resources/"	
 
 clean:
 	@rm -f $(BUILD)/*.o
