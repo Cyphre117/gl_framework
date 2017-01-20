@@ -66,6 +66,7 @@ depend: .depend
 
 # The .app creating suff is done with help from this wonderful link
 # http://joseph-long.com/writing/app-bundles-with-a-makefile/
+# also this http://stackoverflow.com/questions/1596945/building-osx-app-bundle
 
 app: $(OBJS) clean_app create_app
 	@echo "Compiling \033[0;32m$(EXE)\033[0;39m for release"

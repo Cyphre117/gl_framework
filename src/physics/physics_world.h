@@ -17,6 +17,7 @@ public:
 	static PhysicsWorld* get() { return self_; }
 
 	void update( float dt );
+	btRigidBody* addRigidBody( glm::vec3 pos, float mass, btCollisionShape* shape );
 
 	// Setters
 	void setDebugDrawer( btIDebugDraw* debug_drawer );

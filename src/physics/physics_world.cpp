@@ -61,6 +61,34 @@ void PhysicsWorld::update( float dt )
 	world_->stepSimulation( dt );
 }
 
+btRigidBody* PhysicsWorld::addRigidBody( glm::vec3 pos, float mass, btCollisionShape* shape )
+{
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin( glmVec3_btVec3(pos) );
+    btMotionState* motion = new btDefaultMotionState( transform );
+
+	if( mass != 0.0 )
+	{
+		btVector3 inertia( 0.0f, 0.0f, 0.0f );
+		shape->calculateLocalInertia( mass, inertia );
+
+		btRigidBody::btRigidBodyConstructionInfo info( mass, motion, shape, inertia );
+		btRigidBody* rigid_body = new btRigidBody( info );
+		world_->addRigidBody( rigid_body );
+		return rigid_body;
+	}
+	else
+	{
+		// mass == 0.0 threfore it's a static shape, doesn't have inertia
+		btRigidBody::btRigidBodyConstructionInfo info( mass, motion, shape );
+		btRigidBody* rigid_body = new btRigidBody( info );
+		world_->addRigidBody( rigid_body );
+		return rigid_body;
+	}
+
+}
+
 void PhysicsWorld::setDebugDrawer( btIDebugDraw* debug_drawer )
 {
 	world_->setDebugDrawer( debug_drawer );

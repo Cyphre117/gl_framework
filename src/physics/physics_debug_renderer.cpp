@@ -47,6 +47,7 @@ void PhysicsDebugRenderer::drawLine(const btVector3& from, const btVector3& to, 
 	lines_.push_back(color.x());
 	lines_.push_back(color.y());
 	lines_.push_back(color.z());
+	
 	lines_.push_back(to.x());
 	lines_.push_back(to.y());
 	lines_.push_back(to.z());
@@ -62,8 +63,6 @@ void PhysicsDebugRenderer::flushLines()
 
     glBufferData( GL_ARRAY_BUFFER, sizeof(lines_[0]) * lines_.size(), lines_.data(), GL_DYNAMIC_DRAW );
 	glDrawArrays( GL_LINES, 0, lines_.size()/6 );
-
-	std::cout << "Drawing " << lines_.size()/6 << " verts" << std::endl;
 
 	lines_.clear();
 }

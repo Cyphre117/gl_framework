@@ -95,37 +95,12 @@ bool Game::init()
     // Lock and hide the cursor
     input_manager_->lockCursor();
 
-    //*
-    {
-        // Setup some basic physics things for testing
-        btTransform t;
-        t.setIdentity();
-        t.setOrigin( btVector3(0,0,0) );
-        btStaticPlaneShape* plane = new btStaticPlaneShape( btVector3( 0, 1, 0 ), 0 );
-        btMotionState* motion = new btDefaultMotionState( t );
-        btRigidBody::btRigidBodyConstructionInfo info( 0.0, motion, plane );
-        btRigidBody* ground = new btRigidBody( info );
-        physics_world_->world()->addRigidBody( ground );
-    }//*/
+    physics_world_->addRigidBody( glm::vec3(0, 0, 0), 0.0, new btStaticPlaneShape(btVector3(0, 1, 0), 0) );
+    physics_world_->addRigidBody( glm::vec3(2, 5, 0), 1, new btConeShape(0.4, 1) );
+    physics_world_->addRigidBody( glm::vec3(2, 4, 2), 1, new btBoxShape(btVector3(0.5, 0.2, 0.8)) );
+    physics_world_->addRigidBody( glm::vec3(0, 3, -2), 1, new btCylinderShape(btVector3(0.3, 1, 0.3)) );
 
-    //*
-    {
-        float radius = 0.5;
-        float x = 0.0f, y = 10.0f, z = 0.0f;
-        float mass = 0.5f;
-
-        btSphereShape* sphere = new btSphereShape( radius );
-        btVector3 inertia( 0, 0, 0 );           // Inertia is 0 for static object
-        sphere->calculateLocalInertia( mass, inertia );
-
-        btTransform t;                          // Stores position and rotation
-        t.setIdentity();
-        t.setOrigin( btVector3( x, y, z ) );    // Set position
-        btMotionState* motion = new btDefaultMotionState( t );
-        btRigidBody::btRigidBodyConstructionInfo info( mass, motion, sphere, inertia );
-        sphere_1_ = new btRigidBody( info );    // Create the body
-        physics_world_->world()->addRigidBody( sphere_1_ );                    // Register it with the world
-    }//*/
+    sphere_1_ = physics_world_->addRigidBody( glm::vec3(0, 10, 0), 1, new btSphereShape(0.5) );
 
     return success;
 }
